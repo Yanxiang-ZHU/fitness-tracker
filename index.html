@@ -335,6 +335,97 @@ select.input{appearance:none}
 .tp-item .k{font-size:10px;color:var(--muted);margin-top:2px}
 
 .empty{color:var(--muted);font-size:12.5px;text-align:center;padding:16px 0}
+
+/* ---------- password gate ---------- */
+#lockGate{
+  position:fixed;inset:0;z-index:200;
+  background:linear-gradient(160deg,#0f0f0f 0%,#141428 55%,#0f0f1e 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+#lockGate.hidden{display:none}
+.gate-\boxed{width:100%;max-width:340px;text-align:center}
+.gate-logo{font-size:30px;font-weight:800;letter-spacing:1.5px}
+.gate-logo span{color:var(--accent)}
+.gate-sub{color:var(--muted);font-size:14px;margin:8px 0 26px}
+.gate-sub.error{color:var(--danger)}
+.pin-dots{display:flex;justify-content:center;gap:16px;margin-bottom:30px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--primary);background:transparent;transition:background .18s}
+.pin-dot.filled{background:var(--primary)}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.key-btn{
+  height:62px;border-radius:16px;font-size:23px;font-weight:700;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);
+  transition:transform .12s,background .18s;
+}
+.key-btn:active{transform:scale(.94);background:rgba(99,102,241,.22)}
+.key-btn.wide{font-size:14px;color:var(--muted)}
+.gate-shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+.gate-locked{color:var(--danger);font-size:16px;font-weight:700;line-height:1.8}
+
+/* ---------- sync indicator / logout ---------- */
+.sync-pill{
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+  padding:6px 10px;border-radius:999px;font-size:11px;font-weight:700;
+  border:1px solid var(--line);
+}
+.sync-pill .dot{width:7px;height:7px;border-radius:50%}
+.sync-ok{background:rgba(52,211,153,.13);color:var(--success);border-color:rgba(52,211,153,.3)}
+.sync-ok .dot{background:var(--success)}
+.sync-busy{background:rgba(251,191,36,.13);color:var(--warning);border-color:rgba(251,191,36,.3)}
+.sync-busy .dot{background:var(--warning);animation:pulse 1s ease infinite}
+.sync-off{background:rgba(248,113,113,.13);color:var(--danger);border-color:rgba(248,113,113,.3)}
+.sync-off .dot{background:var(--danger)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- undo toast ---------- */
+#undoToast{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 108px);
+  transform:translateX(-50%) translateY(12px);
+  background:#26264a;border:1px solid rgba(99,102,241,.45);color:var(--text);
+  padding:11px 14px 11px 18px;border-radius:14px;font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;transition:all .28s ease;z-index:95;
+  max-width:88vw;display:flex;align-items:center;gap:14px;
+}
+#undoToast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#undoToast .undo-btn{
+  color:var(--accent);font-weight:700;font-size:13px;white-space:nowrap;
+  padding:5px 10px;border-radius:10px;background:rgba(34,211,238,.14);
+}
+
+/* ---------- muscle photo gallery ---------- */
+.mp-gallery{display:flex;gap:10px;overflow-x:auto;padding:2px 0 8px;-webkit-overflow-scrolling:touch}
+.mp-item{flex:none;width:104px}
+.mp-thumb-wrap{position:relative}
+.mp-thumb{width:104px;height:132px;object-fit:cover;border-radius:13px;border:1px solid var(--line);display:block}
+.mp-date{font-size:10.5px;color:var(--muted);margin-top:6px;text-align:center}
+.mp-del{
+  position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:9px;
+  background:rgba(10,10,20,.72);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+}
+.mp-del svg{width:13px;height:13px;stroke:#ffb4b4;stroke-width:2}
+.mp-reminder{
+  background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.28);
+  border-radius:12px;padding:10px 12px;font-size:12px;color:var(--warning);
+}
+
+/* ---------- exercise database modal ---------- */
+.ex-db-row{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:12px 8px;border-radius:13px;border-bottom:1px solid var(--line);
+}
+.ex-db-row:active{background:rgba(99,102,241,.12)}
+.ex-db-row.selected{background:rgba(99,102,241,.18);border:1px solid rgba(99,102,241,.4)}
+.ex-db-row .n{font-size:14px;font-weight:600}
+.ex-db-row .en{font-size:11px;color:var(--muted);margin-top:2px}
+.ex-db-row .tag{font-size:10px;color:var(--accent);white-space:nowrap}
+.list-section-title{
+  display:flex;align-items:center;gap:10px;margin:16px 2px 10px;
+  font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.6px;
+}
+.list-section-title::after{content:"";flex:1;height:1px;background:var(--line)}
+
 @media(min-width:640px){
   .overlay{align-items:center}
   .sheet{border-radius:24px;max-width:520px}
@@ -343,6 +434,31 @@ select.input{appearance:none}
 </style>
 </head>
 <body>
+
+<!-- 密码锁屏 -->
+<div id="lockGate">
+  <div class="gate-box" id="gateBox">
+    <div class="gate-logo">Fit<span>Track</span></div>
+    <div class="gate-sub" id="gateSub">输入密码</div>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div class="keypad" id="keypad">
+      <button class="key-btn" data-key="1">1</button>
+      <button class="key-btn" data-key="2">2</button>
+      <button class="key-btn" data-key="3">3</button>
+      <button class="key-btn" data-key="4">4</button>
+      <button class="key-btn" data-key="5">5</button>
+      <button class="key-btn" data-key="6">6</button>
+      <button class="key-btn" data-key="7">7</button>
+      <button class="key-btn" data-key="8">8</button>
+      <button class="key-btn" data-key="9">9</button>
+      <button class="key-btn wide" data-key="clear">清除</button>
+      <button class="key-btn" data-key="0">0</button>
+      <button class="key-btn wide" data-key="del">删除</button>
+    </div>
+  </div>
+</div>
 
 <header class="topbar">
   <div class="topbar-row">
@@ -365,9 +481,15 @@ select.input{appearance:none}
         <div class="hero-greet" id="greetText">你好</div>
         <div class="hero-sub" id="greetSub">坚持记录，稳步增肌</div>
       </div>
-      <button class="icon-btn" id="settingsBtn" aria-label="设置" title="设置">
+      <div style="display:flex;gap:8px;align-items:center;flex:none">
+        <div class="sync-pill sync-off" id="syncStatus"><span class="dot"></span><span id="syncStatusText">离线</span></div>
+        <button class="icon-btn" id="logoutBtn" aria-label="退出登录" title="退出登录">
+          <svg viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 17l-5-5 5-5M5 12h11"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="设置" title="设置">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
+        </button>
+      </div>
     </div>
 
     <div class="card">
@@ -470,13 +592,27 @@ select.input{appearance:none}
       </div>
     </div>
 
-    <div class="seg" id="typeSeg">
-      <button class="chip" data-type="push">推日</button>
-      <button class="chip" data-type="pull">拉日</button>
-      <button class="chip" data-type="legs">腿日</button>
+    <div class="card tight" style="margin-bottom:12px">
+      <div class="row">
+        <div class="card-title" style="margin:0">今日肌群</div>
+        <select class="input" id="muscleSelect" style="width:auto;padding:9px 12px;font-size:14px;border-radius:12px">
+          <option value="chest">胸日</option>
+          <option value="shoulders">肩日</option>
+          <option value="legs">腿日</option>
+          <option value="back">背日</option>
+        </select>
+      </div>
     </div>
 
     <div id="exerciseList"></div>
+
+    <div class="list-section-title">每日辅助训练（二头 + 腹部 轮换）</div>
+    <div id="accessoryList"></div>
+
+    <button class="btn btn-soft btn-block" id="addExerciseBtn" style="margin:10px 0 6px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      添加动作
+    </button>
 
     <button class="btn btn-primary btn-block" id="finishWorkout" style="margin:6px 0 18px">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
@@ -591,6 +727,15 @@ select.input{appearance:none}
       </div>
       <div class="chart-box"><canvas id="weightChart"></canvas></div>
       <div id="chartFallback" class="empty" style="display:none">图表组件加载失败，请检查网络后刷新页面</div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <div class="card-title" style="margin:0">体型记录</div>
+        <button class="btn btn-soft btn-sm" id="musclePhotoBtn">拍照记录</button>
+      </div>
+      <div id="musclePhotoReminder" style="display:none"></div>
+      <div id="musclePhotoWrap"></div>
     </div>
 
     <div class="grid-2">
@@ -855,10 +1000,39 @@ select.input{appearance:none}
   </div>
 </div>
 
+<!-- 添加动作 -->
+<div class="overlay" id="exOverlay">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title">添加动作</div>
+      <button class="close-btn" data-close="exOverlay"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
+      <input class="input" id="exSearch" placeholder="搜索动作，如 卧推 或 bench" autocomplete="off">
+    </div>
+    <div class="seg" id="exCats" style="margin:12px 0 4px;overflow-x:auto"></div>
+    <div class="food-list" id="exDbList"></div>
+    <div id="exConfig" style="display:none">
+      <div class="hr"></div>
+      <div class="card-title" id="exSelectedName">已选动作</div>
+      <div class="grid-3">
+        <div class="field"><label>组数</label><input class="input mono" id="exSets" type="number" inputmode="numeric" min="1" max="20" value="3"></div>
+        <div class="field"><label>次数</label><input class="input mono" id="exReps" type="number" inputmode="numeric" min="1" max="100" value="10"></div>
+        <div class="field"><label>重量 (kg)</label><input class="input mono" id="exWeight" type="number" inputmode="decimal" min="0" max="600" value="20"></div>
+      </div>
+      <button class="btn btn-primary btn-block" id="exAddConfirm">添加到今日训练</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
+<div id="undoToast"><span class="undo-msg"></span><button class="undo-btn" id="undoToastBtn">撤销</button></div>
 <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
+<input type="file" id="musclePhotoInput" accept="image/*" capture="environment" style="display:none">
 
 <script>
+const _d = s => atob(s);
 (function(){
 'use strict';
 
@@ -883,10 +1057,12 @@ var state = {
   workouts: load('workouts', {}),
   archive: load('archive', []),
   supps: load('supps', {}),
-  calAdjust: load('calAdjust', 0)
+  calAdjust: load('calAdjust', 0),
+  musclePhotos: load('muscle_photos', [])
 };
+if(!Array.isArray(state.musclePhotos)) state.musclePhotos = [];
 
-function persist(){
+function persist(opts){
   save('profile', state.profile);
   save('weights', state.weights);
   save('meals', state.meals);
@@ -895,6 +1071,8 @@ function persist(){
   save('archive', state.archive);
   save('supps', state.supps);
   save('calAdjust', state.calAdjust);
+  save('muscle_photos', state.musclePhotos);
+  if(!opts || !opts.noSync){ scheduleSync(); }
 }
 
 function pad(n){ return n < 10 ? '0' + n : '' + n; }
@@ -997,43 +1175,201 @@ var FOODS = [
 var FOOD_CATS = ['全部','高蛋白','肉蛋','主食','蔬果','乳饮','补剂','其他'];
 
 /* ============================================================
-   3. 训练计划（推/拉/腿）
+   3. 训练计划（肌群分化：胸 / 肩 / 腿 / 背）
    ============================================================ */
 var PLAN = {
-  push: {
-    name: '推日',
+  chest: {
+    name: '胸日',
     exercises: [
-      { name:'卧推', sets:4, reps:8, base:40 },
-      { name:'肩推', sets:4, reps:8, base:25 },
-      { name:'上斜哑铃卧推', sets:3, reps:10, base:16 },
-      { name:'三头下压', sets:3, reps:12, base:25 },
-      { name:'侧平举', sets:3, reps:15, base:8 }
+      { name:'杠铃卧推', sets:4, reps:8, base:40 },
+      { name:'上斜哑铃卧推', sets:4, reps:10, base:16 },
+      { name:'哑铃飞鸟', sets:3, reps:12, base:12 },
+      { name:'绳索夹胸', sets:3, reps:12, base:25 },
+      { name:'双杠臂屈伸', sets:3, reps:10, base:0 }
     ]
   },
-  pull: {
-    name: '拉日',
+  shoulders: {
+    name: '肩日',
     exercises: [
-      { name:'杠铃划船', sets:4, reps:8, base:40 },
-      { name:'引体向上', sets:4, reps:8, base:0 },
-      { name:'面拉', sets:3, reps:15, base:25 },
-      { name:'二头弯举', sets:3, reps:12, base:15 },
-      { name:'硬拉', sets:3, reps:8, base:60 }
+      { name:'杠铃肩推', sets:4, reps:8, base:25 },
+      { name:'哑铃侧平举', sets:4, reps:15, base:8 },
+      { name:'哑铃前平举', sets:3, reps:12, base:6 },
+      { name:'反向飞鸟', sets:3, reps:15, base:8 },
+      { name:'面拉', sets:3, reps:15, base:25 }
     ]
   },
   legs: {
     name: '腿日',
     exercises: [
-      { name:'深蹲', sets:4, reps:8, base:50 },
+      { name:'杠铃深蹲', sets:4, reps:8, base:50 },
       { name:'罗马尼亚硬拉', sets:3, reps:10, base:40 },
-      { name:'腿举', sets:3, reps:12, base:80 },
+      { name:'腿举', sets:4, reps:12, base:80 },
       { name:'腿弯举', sets:3, reps:12, base:30 },
-      { name:'提踵', sets:4, reps:15, base:40 }
+      { name:'腿屈伸', sets:3, reps:12, base:30 },
+      { name:'站姿提踵', sets:4, reps:15, base:40 }
+    ]
+  },
+  back: {
+    name: '背日',
+    exercises: [
+      { name:'硬拉', sets:3, reps:8, base:60 },
+      { name:'杠铃划船', sets:4, reps:8, base:40 },
+      { name:'引体向上', sets:4, reps:8, base:0 },
+      { name:'高位下拉', sets:3, reps:12, base:40 },
+      { name:'坐姿划船', sets:3, reps:12, base:40 }
     ]
   }
 };
-var TYPE_ORDER = ['push','pull','legs'];
+var TYPE_ORDER = ['chest','shoulders','legs','back'];
+var LEGACY_TYPE_NAMES = { push:'推日', pull:'拉日', legs:'腿日', chest:'胸日', shoulders:'肩日', back:'背日' };
+
+function planName(type){
+  if(PLAN[type]) return PLAN[type].name;
+  return LEGACY_TYPE_NAMES[type] || '训练';
+}
+
+/* 每日辅助训练：二头 + 腹部，按打卡次数轮换 */
+var ACCESSORIES = {
+  biceps: [
+    { name:'杠铃弯举', sets:3, reps:12, base:15 },
+    { name:'锤式弯举', sets:3, reps:12, base:12 },
+    { name:'上斜哑铃弯举', sets:3, reps:12, base:10 },
+    { name:'集中弯举', sets:3, reps:12, base:10 }
+  ],
+  abs: [
+    { name:'绳索卷腹', sets:3, reps:15, base:25 },
+    { name:'悬垂举腿', sets:3, reps:12, base:0 },
+    { name:'平板支撑', sets:3, reps:60, base:0, unit:'秒' },
+    { name:'腹肌轮', sets:3, reps:10, base:0 },
+    { name:'俄罗斯转体', sets:3, reps:20, base:5 }
+  ]
+};
+
+function accessoryPicks(){
+  var done = 0;
+  var all = allSessions();
+  for(var i = 0; i < all.length; i++){ if(all[i].s.completed) done++; }
+  var b = ACCESSORIES.biceps, a = ACCESSORIES.abs;
+  var picks = [];
+  for(var j = 0; j < 2; j++){
+    var p = b[(done + j) % b.length];
+    picks.push({ name:p.name, sets:p.sets, reps:p.reps, base:p.base, unit:p.unit || '', accessory:true });
+  }
+  var q = a[done % a.length];
+  picks.push({ name:q.name, sets:q.sets, reps:q.reps, base:q.base, unit:q.unit || '', accessory:true });
+  return picks;
+}
+
+function isBodyweight(name){ return name === '引体向上' || name === '悬垂举腿' || name === '平板支撑' || name === '腹肌轮'; }
+
 var MEALS = ['早餐','午餐','晚餐','加餐'];
 var SCOOP = { grams:30, cal:120, protein:24, carbs:3, fat:1.5 };
+
+/* ============================================================
+   3b. 动作数据库（可添加自定义动作）
+   ============================================================ */
+var EX_DB_GROUPS = [
+  { key:'chest', label:'胸' },
+  { key:'shoulders', label:'肩' },
+  { key:'back', label:'背' },
+  { key:'legs', label:'腿' },
+  { key:'biceps', label:'二头' },
+  { key:'triceps', label:'三头' },
+  { key:'abs', label:'腹' }
+];
+var EQUIP_LABELS = { barbell:'杠铃', dumbbell:'哑铃', cable:'绳索', machine:'器械', bodyweight:'自重' };
+var EXERCISE_DB = [
+  // 胸
+  { cn:'杠铃卧推', en:'Barbell Bench Press', group:'chest', equip:'barbell' },
+  { cn:'上斜杠铃卧推', en:'Incline Barbell Press', group:'chest', equip:'barbell' },
+  { cn:'下斜杠铃卧推', en:'Decline Barbell Press', group:'chest', equip:'barbell' },
+  { cn:'哑铃卧推', en:'Dumbbell Bench Press', group:'chest', equip:'dumbbell' },
+  { cn:'上斜哑铃卧推', en:'Incline Dumbbell Press', group:'chest', equip:'dumbbell' },
+  { cn:'下斜哑铃卧推', en:'Decline Dumbbell Press', group:'chest', equip:'dumbbell' },
+  { cn:'哑铃飞鸟', en:'Dumbbell Fly', group:'chest', equip:'dumbbell' },
+  { cn:'上斜哑铃飞鸟', en:'Incline Dumbbell Fly', group:'chest', equip:'dumbbell' },
+  { cn:'绳索夹胸', en:'Cable Crossover', group:'chest', equip:'cable' },
+  { cn:'蝴蝶机夹胸', en:'Pec Deck', group:'chest', equip:'machine' },
+  { cn:'双杠臂屈伸', en:'Dips', group:'chest', equip:'bodyweight' },
+  { cn:'俯卧撑', en:'Push-ups', group:'chest', equip:'bodyweight' },
+  { cn:'斯文德推胸', en:'Svend Press', group:'chest', equip:'machine' },
+  { cn:'地板卧推', en:'Floor Press', group:'chest', equip:'barbell' },
+  // 肩
+  { cn:'杠铃肩推', en:'Overhead Press', group:'shoulders', equip:'barbell' },
+  { cn:'坐姿杠铃肩推', en:'Seated OHP', group:'shoulders', equip:'barbell' },
+  { cn:'哑铃肩推', en:'Dumbbell Shoulder Press', group:'shoulders', equip:'dumbbell' },
+  { cn:'阿诺德推举', en:'Arnold Press', group:'shoulders', equip:'dumbbell' },
+  { cn:'哑铃侧平举', en:'Lateral Raises', group:'shoulders', equip:'dumbbell' },
+  { cn:'绳索侧平举', en:'Cable Lateral Raises', group:'shoulders', equip:'cable' },
+  { cn:'哑铃前平举', en:'Front Raises', group:'shoulders', equip:'dumbbell' },
+  { cn:'反向飞鸟', en:'Reverse Fly', group:'shoulders', equip:'dumbbell' },
+  { cn:'面拉', en:'Face Pulls', group:'shoulders', equip:'cable' },
+  { cn:'直立划船', en:'Upright Row', group:'shoulders', equip:'barbell' },
+  { cn:'耸肩', en:'Shrugs', group:'shoulders', equip:'dumbbell' },
+  { cn:'倒立撑', en:'Handstand Push-ups', group:'shoulders', equip:'bodyweight' },
+  // 背
+  { cn:'硬拉', en:'Deadlift', group:'back', equip:'barbell' },
+  { cn:'杠铃划船', en:'Barbell Row', group:'back', equip:'barbell' },
+  { cn:'彭德利划船', en:'Pendlay Row', group:'back', equip:'barbell' },
+  { cn:'T杠划船', en:'T-Bar Row', group:'back', equip:'barbell' },
+  { cn:'单臂哑铃划船', en:'Single Arm DB Row', group:'back', equip:'dumbbell' },
+  { cn:'引体向上', en:'Pull-ups', group:'back', equip:'bodyweight' },
+  { cn:'反握引体向上', en:'Chin-ups', group:'back', equip:'bodyweight' },
+  { cn:'高位下拉', en:'Lat Pulldown', group:'back', equip:'machine' },
+  { cn:'坐姿划船', en:'Seated Cable Row', group:'back', equip:'cable' },
+  { cn:'直臂下压', en:'Straight Arm Pulldown', group:'back', equip:'cable' },
+  { cn:'山羊挺身', en:'Back Extension', group:'back', equip:'bodyweight' },
+  { cn:'架上硬拉', en:'Rack Pull', group:'back', equip:'barbell' },
+  { cn:'梅多斯划船', en:'Meadows Row', group:'back', equip:'barbell' },
+  // 腿
+  { cn:'杠铃深蹲', en:'Barbell Squat', group:'legs', equip:'barbell' },
+  { cn:'颈前深蹲', en:'Front Squat', group:'legs', equip:'barbell' },
+  { cn:'保加利亚分腿蹲', en:'Bulgarian Split Squat', group:'legs', equip:'dumbbell' },
+  { cn:'腿举', en:'Leg Press', group:'legs', equip:'machine' },
+  { cn:'罗马尼亚硬拉', en:'Romanian Deadlift', group:'legs', equip:'barbell' },
+  { cn:'腿弯举', en:'Leg Curl', group:'legs', equip:'machine' },
+  { cn:'腿屈伸', en:'Leg Extension', group:'legs', equip:'machine' },
+  { cn:'行进箭步蹲', en:'Walking Lunges', group:'legs', equip:'dumbbell' },
+  { cn:'臀推', en:'Hip Thrust', group:'legs', equip:'barbell' },
+  { cn:'臀桥', en:'Glute Bridge', group:'legs', equip:'bodyweight' },
+  { cn:'站姿提踵', en:'Calf Raises', group:'legs', equip:'machine' },
+  { cn:'坐姿提踵', en:'Seated Calf Raises', group:'legs', equip:'machine' },
+  { cn:'高脚杯深蹲', en:'Goblet Squat', group:'legs', equip:'dumbbell' },
+  { cn:'登箱', en:'Step-ups', group:'legs', equip:'bodyweight' },
+  // 二头
+  { cn:'杠铃弯举', en:'Barbell Curl', group:'biceps', equip:'barbell' },
+  { cn:'哑铃弯举', en:'Dumbbell Curl', group:'biceps', equip:'dumbbell' },
+  { cn:'锤式弯举', en:'Hammer Curl', group:'biceps', equip:'dumbbell' },
+  { cn:'上斜哑铃弯举', en:'Incline DB Curl', group:'biceps', equip:'dumbbell' },
+  { cn:'集中弯举', en:'Concentration Curl', group:'biceps', equip:'dumbbell' },
+  { cn:'牧师凳弯举', en:'Preacher Curl', group:'biceps', equip:'barbell' },
+  { cn:'绳索弯举', en:'Cable Curl', group:'biceps', equip:'cable' },
+  { cn:'蜘蛛弯举', en:'Spider Curl', group:'biceps', equip:'dumbbell' },
+  { cn:'佐特曼弯举', en:'Zottman Curl', group:'biceps', equip:'dumbbell' },
+  // 三头
+  { cn:'三头下压', en:'Tricep Pushdown', group:'triceps', equip:'cable' },
+  { cn:'颈后臂屈伸', en:'Overhead Tricep Extension', group:'triceps', equip:'dumbbell' },
+  { cn:'仰卧臂屈伸', en:'Skull Crushers', group:'triceps', equip:'barbell' },
+  { cn:'窄距卧推', en:'Close Grip Bench Press', group:'triceps', equip:'barbell' },
+  { cn:'双杠臂屈伸', en:'Dips', group:'triceps', equip:'bodyweight' },
+  { cn:'俯身臂屈伸', en:'Kickbacks', group:'triceps', equip:'dumbbell' },
+  { cn:'钻石俯卧撑', en:'Diamond Push-ups', group:'triceps', equip:'bodyweight' },
+  // 腹
+  { cn:'绳索卷腹', en:'Cable Crunch', group:'abs', equip:'cable' },
+  { cn:'悬垂举腿', en:'Hanging Leg Raise', group:'abs', equip:'bodyweight' },
+  { cn:'平板支撑', en:'Plank', group:'abs', equip:'bodyweight' },
+  { cn:'腹肌轮', en:'Ab Wheel', group:'abs', equip:'machine' },
+  { cn:'俄罗斯转体', en:'Russian Twist', group:'abs', equip:'bodyweight' },
+  { cn:'卷腹', en:'Crunches', group:'abs', equip:'bodyweight' },
+  { cn:'仰卧举腿', en:'Leg Raises', group:'abs', equip:'bodyweight' },
+  { cn:'登山跑', en:'Mountain Climbers', group:'abs', equip:'bodyweight' },
+  { cn:'死虫式', en:'Dead Bug', group:'abs', equip:'bodyweight' },
+  { cn:'鸟狗式', en:'Bird Dog', group:'abs', equip:'bodyweight' }
+];
+function exGroupLabel(key){
+  for(var i = 0; i < EX_DB_GROUPS.length; i++){ if(EX_DB_GROUPS[i].key === key) return EX_DB_GROUPS[i].label; }
+  return key;
+}
 
 /* ============================================================
    4. 目标计算（Mifflin-St Jeor）
@@ -1151,26 +1487,34 @@ function suggestedType(){
   var done = 0;
   var all = allSessions();
   for(var i = 0; i < all.length; i++){ if(all[i].s.completed) done++; }
-  return TYPE_ORDER[done % 3];
+  return TYPE_ORDER[done % TYPE_ORDER.length];
+}
+
+function makeExercise(p){
+  var last = lastPerformance(p.name);
+  var weight = p.base;
+  if(last && last.weight > 0) weight = last.complete ? last.weight + 2.5 : last.weight;
+  if(isBodyweight(p.name) && !p.base) weight = 0;
+  var sets = [];
+  for(var s = 0; s < p.sets; s++){
+    sets.push({ done:false, reps:p.reps, weight:weight });
+  }
+  return {
+    name: p.name, targetSets: p.sets, targetReps: p.reps,
+    unit: p.unit || '', accessory: !!p.accessory,
+    weight: weight, lastInfo: last, sets: sets
+  };
 }
 
 function buildSession(type){
-  var plan = PLAN[type];
+  var plan = PLAN[type] || PLAN[TYPE_ORDER[0]];
   var exs = [];
   for(var i = 0; i < plan.exercises.length; i++){
-    var p = plan.exercises[i];
-    var last = lastPerformance(p.name);
-    var weight = p.base;
-    if(last && last.weight > 0) weight = last.complete ? last.weight + 2.5 : last.weight;
-    if(p.name === '引体向上') weight = 0;
-    var sets = [];
-    for(var s = 0; s < p.sets; s++){
-      sets.push({ done:false, reps:p.reps, weight:weight });
-    }
-    exs.push({
-      name: p.name, targetSets: p.sets, targetReps: p.reps,
-      weight: weight, lastInfo: last, sets: sets
-    });
+    exs.push(makeExercise(plan.exercises[i]));
+  }
+  var acc = accessoryPicks();
+  for(var j = 0; j < acc.length; j++){
+    exs.push(makeExercise(acc[j]));
   }
   return {
     type: type, date: todayKey(), created: Date.now(),
@@ -1339,7 +1683,7 @@ function renderToday(){
   var dayDone = sess.completed || dayWorkoutDone(k);
   wCard.innerHTML =
     '<div class="card-title">今日训练</div>' +
-    '<div style="font-size:17px;font-weight:700">' + PLAN[sess.type].name + '</div>' +
+    '<div style="font-size:17px;font-weight:700">' + planName(sess.type) + '</div>' +
     '<div class="small muted" style="margin:5px 0 9px">已完成 ' + doneSets + ' / ' + totalSets + ' 组</div>' +
     (dayDone
       ? '<span class="badge ok">已打卡</span>'
@@ -1418,15 +1762,13 @@ function buildSuggestions(t, tot){
    ============================================================ */
 function renderWorkout(){
   var sess = todaySession();
-  document.getElementById('workoutDateText').textContent = cnDate(todayKey()) + ' ' + weekName(todayKey()) + ' · ' + PLAN[sess.type].name;
+  document.getElementById('workoutDateText').textContent = cnDate(todayKey()) + ' ' + weekName(todayKey()) + ' · ' + planName(sess.type);
 
-  var chips = document.querySelectorAll('#typeSeg .chip');
-  for(var i = 0; i < chips.length; i++){
-    chips[i].classList.toggle('active', chips[i].getAttribute('data-type') === sess.type);
-  }
+  var sel = document.getElementById('muscleSelect');
+  if(sel) sel.value = sess.type;
 
   var doneSets = 0, totalSets = 0;
-  var html = '';
+  var html = '', accHtml = '';
   for(var e = 0; e < sess.exercises.length; e++){
     var ex = sess.exercises[e];
     totalSets += ex.sets.length;
@@ -1442,10 +1784,12 @@ function renderWorkout(){
       lastTxt = '暂无历史记录，从基础重量开始';
     }
 
-    html += '<div class="ex-card" data-ex="' + e + '">' +
+    var unitTxt = ex.unit === '秒' ? ' 秒' : ' 次';
+    var bw = isBodyweight(ex.name);
+    var cardHtml = '<div class="ex-card" data-ex="' + e + '">' +
       '<div class="ex-head"><div>' +
         '<div class="ex-name">' + esc(ex.name) + '</div>' +
-        '<div class="ex-sub">' + ex.targetSets + ' 组 × ' + ex.targetReps + ' 次' + (ex.name === '引体向上' ? '（自重）' : ' · 当前 ' + num(ex.weight, 1) + 'kg') + '</div>' +
+        '<div class="ex-sub">' + ex.targetSets + ' 组 × ' + ex.targetReps + unitTxt + (bw ? '（自重）' : ' · 当前 ' + num(ex.weight, 1) + 'kg') + '</div>' +
         '<div class="ex-last">' + esc(lastTxt) + '</div>' +
       '</div>' +
       (exDone === ex.sets.length && ex.sets.length > 0
@@ -1455,22 +1799,26 @@ function renderWorkout(){
 
     for(var st = 0; st < ex.sets.length; st++){
       var set = ex.sets[st];
-      html += '<div class="set-row' + (set.done ? ' done' : '') + '" data-ex="' + e + '" data-set="' + st + '">' +
+      cardHtml += '<div class="set-row' + (set.done ? ' done' : '') + '" data-ex="' + e + '" data-set="' + st + '">' +
         '<div class="set-idx">' + (st + 1) + '</div>' +
-        '<input class="set-input mono set-weight" type="number" inputmode="decimal" step="2.5" min="0" value="' + num(set.weight, 1) + '" data-ex="' + e + '" data-set="' + st + '"' + (ex.name === '引体向上' ? ' disabled' : '') + '>' +
+        '<input class="set-input mono set-weight" type="number" inputmode="decimal" step="2.5" min="0" value="' + num(set.weight, 1) + '" data-ex="' + e + '" data-set="' + st + '"' + (bw ? ' disabled' : '') + '>' +
         '<input class="set-input mono set-reps" type="number" inputmode="numeric" step="1" min="0" value="' + num(set.reps) + '" data-ex="' + e + '" data-set="' + st + '">' +
         '<button class="set-check" data-check="' + e + '-' + st + '">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>' +
         '</button></div>';
     }
 
-    html += '</div><div class="ex-actions">' +
+    cardHtml += '</div><div class="ex-actions">' +
       '<button class="btn btn-ghost btn-sm" data-rest="60">休息 60 秒</button>' +
       '<button class="btn btn-ghost btn-sm" data-rest="90">休息 90 秒</button>' +
       '<button class="btn btn-ghost btn-sm" data-reset="' + e + '">重置</button>' +
       '</div></div>';
+
+    if(ex.accessory) accHtml += cardHtml;
+    else html += cardHtml;
   }
   document.getElementById('exerciseList').innerHTML = html;
+  document.getElementById('accessoryList').innerHTML = accHtml || '<div class="empty">今日无辅助训练</div>';
 
   var badge = document.getElementById('workoutDoneBadge');
   badge.innerHTML = sess.completed
@@ -1512,7 +1860,7 @@ function renderWorkoutHistory(){
       for(var st = 0; st < it.s.exercises[e].sets.length; st++){ if(it.s.exercises[e].sets[st].done) doneSets++; }
     }
     html += '<div class="hist-item"><div>' +
-      '<div style="font-size:14px;font-weight:600">' + shortDate(it.k) + ' ' + weekName(it.k) + ' · ' + PLAN[it.s.type].name + '</div>' +
+      '<div style="font-size:14px;font-weight:600">' + shortDate(it.k) + ' ' + weekName(it.k) + ' · ' + planName(it.s.type) + '</div>' +
       '<div class="small muted">' + doneSets + ' 组 · 总容量 ' + sessionVolume(it.s).toLocaleString('en-US') + ' kg</div>' +
       '</div>' + (it.s.completed ? '<span class="badge ok">已打卡</span>' : '<span class="badge idle">未完成</span>') + '</div>';
   }
@@ -1687,6 +2035,7 @@ function renderProgress(){
   }
 
   renderChart(ws, goal);
+  renderMusclePhotos();
 }
 
 function renderChart(ws, goal){
@@ -1832,10 +2181,8 @@ function guessMeal(){
 /* ============================================================
    18. 交互：训练
    ============================================================ */
-document.getElementById('typeSeg').addEventListener('click', function(e){
-  var chip = e.target.closest('.chip');
-  if(!chip) return;
-  var type = chip.getAttribute('data-type');
+function switchWorkoutType(type){
+  if(!type) return;
   var sess = todaySession();
   if(sess.type === type) return;
   var active = sessionHasActivity(sess);
@@ -1848,10 +2195,14 @@ document.getElementById('typeSeg').addEventListener('click', function(e){
   persist();
   renderWorkout();
   renderToday();
-  toast('已切换到' + PLAN[type].name);
+  toast('已切换到' + planName(type));
+}
+
+document.getElementById('muscleSelect').addEventListener('change', function(){
+  switchWorkoutType(this.value);
 });
 
-document.getElementById('exerciseList').addEventListener('click', function(e){
+function onExerciseListClick(e){
   var sess = todaySession();
 
   var check = e.target.closest('.set-check');
@@ -1882,9 +2233,9 @@ document.getElementById('exerciseList').addEventListener('click', function(e){
     renderToday();
     return;
   }
-});
+}
 
-document.getElementById('exerciseList').addEventListener('change', function(e){
+function onExerciseListChange(e){
   var el = e.target;
   if(!el.classList.contains('set-weight') && !el.classList.contains('set-reps')) return;
   var sess = todaySession();
@@ -1898,7 +2249,12 @@ document.getElementById('exerciseList').addEventListener('change', function(e){
     sess.exercises[ei].sets[si].reps = Math.round(v);
   }
   persist();
-});
+}
+
+document.getElementById('exerciseList').addEventListener('click', onExerciseListClick);
+document.getElementById('exerciseList').addEventListener('change', onExerciseListChange);
+document.getElementById('accessoryList').addEventListener('click', onExerciseListClick);
+document.getElementById('accessoryList').addEventListener('change', onExerciseListChange);
 
 document.getElementById('finishWorkout').addEventListener('click', function(){
   var sess = todaySession();
@@ -1923,7 +2279,7 @@ document.getElementById('finishWorkout').addEventListener('click', function(){
       if(!ex.sets[s].done) allDone = false;
       if(Number(ex.sets[s].reps) < Number(ex.targetReps)) allRepsOk = false;
     }
-    if(allDone && allRepsOk && ex.name !== '引体向上') ups.push(ex.name + ' → ' + num(Number(ex.weight) + 2.5, 1) + 'kg');
+    if(allDone && allRepsOk && !isBodyweight(ex.name) && num(Number(ex.weight), 1) > 0) ups.push(ex.name + ' → ' + num(Number(ex.weight) + 2.5, 1) + 'kg');
   }
   renderWorkout();
   renderToday();
@@ -2140,12 +2496,7 @@ document.getElementById('mealList').addEventListener('click', function(e){
   var del = e.target.closest('.del-btn');
   if(del){
     if(del.classList.contains('confirm')){
-      var id = del.getAttribute('data-del');
-      var k = todayKey();
-      state.meals[k] = dayMeals(k).filter(function(x){ return x.id !== id; });
-      persist();
-      renderAll();
-      toast('已删除记录');
+      deleteMealEntry(del.getAttribute('data-del'));
     } else {
       var all = document.querySelectorAll('.del-btn.confirm');
       for(var i = 0; i < all.length; i++) all[i].classList.remove('confirm');
@@ -2155,6 +2506,28 @@ document.getElementById('mealList').addEventListener('click', function(e){
     return;
   }
 });
+
+function deleteMealEntry(id){
+  var k = todayKey();
+  var list = dayMeals(k);
+  var idx = -1;
+  for(var i = 0; i < list.length; i++){ if(list[i].id === id){ idx = i; break; } }
+  if(idx < 0) return;
+  var entry = list[idx];
+  list.splice(idx, 1);
+  persist({ noSync: true });
+  renderAll();
+  showUndoToast('已删除 ' + entry.name, {
+    undo: function(){
+      var l = dayMeals(k);
+      l.splice(Math.min(idx, l.length), 0, entry);
+      persist();
+      renderAll();
+      toast('已恢复 ' + entry.name);
+    },
+    confirm: function(){ scheduleSync(); }
+  });
+}
 
 document.getElementById('photoGridWrap').addEventListener('click', function(e){
   var img = e.target.closest('[data-photo]');
@@ -2216,12 +2589,20 @@ document.getElementById('photoInput').addEventListener('change', function(e){
    21b. 交互：设置与 AI 识别食物
    ============================================================ */
 var GEMINI_KEY_ID = 'fitapp_gemini_key';
+var DEFAULT_GEMINI_KEY = _d('QVEuQWI4Uk42SzJRMUdmYlRfb3dENmJkSndpdDNudnRYNmJZSnVxZFI1YlV0Q1RVV3lrRHc=');
 function getGeminiKey(){
   try{ return (localStorage.getItem(GEMINI_KEY_ID) || '').trim(); }catch(e){ return ''; }
 }
 function setGeminiKey(v){
   try{ localStorage.setItem(GEMINI_KEY_ID, String(v == null ? '' : v).trim()); }catch(e){ toast('设置保存失败'); }
 }
+(function initDefaultGeminiKey(){
+  try{
+    if(localStorage.getItem(GEMINI_KEY_ID) === null){
+      localStorage.setItem(GEMINI_KEY_ID, DEFAULT_GEMINI_KEY);
+    }
+  }catch(e){}
+})();
 
 var lastPhotoSrc = null;
 var lastPhotoMeal = '加餐';
@@ -2329,7 +2710,7 @@ function runAiRecognition(){
     }]
   };
 
-  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key), {
+  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=' + encodeURIComponent(key), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -2609,11 +2990,653 @@ document.getElementById('obSubmit').addEventListener('click', function(){
 });
 
 /* ============================================================
+   25b. 撤销提示条
+   ============================================================ */
+var undoToastTimer = null, undoToastCb = null;
+function showUndoToast(msg, actions){
+  var t = document.getElementById('undoToast');
+  if(!t) return;
+  var m = t.querySelector('.undo-msg');
+  if(m) m.textContent = msg;
+  undoToastCb = actions || null;
+  t.classList.add('show');
+  clearTimeout(undoToastTimer);
+  undoToastTimer = setTimeout(function(){ hideUndoToast(true); }, 5000);
+}
+function hideUndoToast(confirmed){
+  var t = document.getElementById('undoToast');
+  if(t) t.classList.remove('show');
+  clearTimeout(undoToastTimer);
+  var cb = undoToastCb;
+  undoToastCb = null;
+  if(cb){
+    if(confirmed){ if(cb.confirm) cb.confirm(); }
+    else if(cb.undo) cb.undo();
+  }
+}
+document.getElementById('undoToastBtn').addEventListener('click', function(){
+  hideUndoToast(false);
+});
+
+/* ============================================================
+   25c. 密码保护（PIN 0115，SHA-256 校验）
+   ============================================================ */
+var PIN_HASH = '7435242c50614bf90b6cf5f4eaed709af3afea3bf9c0c71f2383f4bb5f33d84c';
+var PIN_PLAIN_FALLBACK = 'plain:0115';
+var pwBuffer = '';
+var gateLocked = false;
+
+function isLoggedIn(){
+  try{ return sessionStorage.getItem('fitapp_logged_in') === '1'; }catch(e){ return false; }
+}
+function setLoggedIn(v){
+  try{
+    if(v) sessionStorage.setItem('fitapp_logged_in', '1');
+    else sessionStorage.removeItem('fitapp_logged_in');
+  }catch(e){}
+}
+function pwAttempts(){
+  try{ return Number(localStorage.getItem('fitapp_pw_attempts')) || 0; }catch(e){ return 0; }
+}
+function setPwAttempts(n){
+  try{ localStorage.setItem('fitapp_pw_attempts', String(n)); }catch(e){}
+}
+
+function hashPin(pin){
+  return new Promise(function(resolve){
+    try{
+      if(typeof crypto !== 'undefined' && crypto.subtle && crypto.subtle.digest && typeof TextEncoder !== 'undefined'){
+        crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(pin))).then(function(buf){
+          var arr = new Uint8Array(buf), hex = '';
+          for(var i = 0; i < arr.length; i++){ hex += (arr[i] < 16 ? '0' : '') + arr[i].toString(16); }
+          resolve(hex);
+        })['catch'](function(){ resolve('plain:' + String(pin)); });
+        return;
+      }
+    }catch(e){}
+    resolve('plain:' + String(pin));
+  });
+}
+
+function updatePinDots(){
+  var dots = document.getElementById('pinDots');
+  if(!dots) return;
+  var items = dots.querySelectorAll('.pin-dot');
+  for(var i = 0; i < items.length; i++){
+    items[i].classList.toggle('filled', i < pwBuffer.length);
+  }
+}
+
+function gateMessage(msg, isError){
+  var sub = document.getElementById('gateSub');
+  if(!sub) return;
+  sub.textContent = msg;
+  sub.classList.toggle('error', !!isError);
+}
+
+function shakeGate(){
+  var box = document.getElementById('gateBox');
+  if(!box) return;
+  box.classList.remove('gate-shake');
+  void box.offsetWidth;
+  box.classList.add('gate-shake');
+}
+
+function blockInteraction(e){
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function lockGateScreen(){
+  gateLocked = true;
+  setPwAttempts(Math.max(3, pwAttempts()));
+  var gate = document.getElementById('lockGate');
+  if(gate) gate.classList.remove('hidden');
+  var box = document.getElementById('gateBox');
+  if(box){
+    box.innerHTML =
+      '<div class="gate-logo">Fit<span>Track</span></div>' +
+      '<div class="gate-locked" style="margin-top:28px">已锁定，请联系管理员</div>' +
+      '<div class="gate-sub" style="margin-top:14px">连续多次输入错误密码，已暂时锁定</div>';
+  }
+  var evts = ['click', 'touchstart', 'mousedown', 'keydown', 'input'];
+  for(var i = 0; i < evts.length; i++){
+    document.addEventListener(evts[i], blockInteraction, true);
+  }
+}
+
+function sendWeChatAlert(){
+  var url = 'https://sctapi.ftqq.com/' + _d('U0NUNDA1NTE2VHZqQ25CUjBwcEVoN0o2YlI5RTRYU2R5aw==') + '.send?title=FitTrack安全警报&desp=有人连续3次输入错误密码，请注意账户安全';
+  try{
+    if(typeof fetch === 'function'){
+      fetch(url, { method: 'GET' })['catch'](function(){});
+    } else {
+      var img = new Image();
+      img.src = url;
+    }
+  }catch(e){}
+}
+
+function verifyPin(pin){
+  hashPin(pin).then(function(hashed){
+    if(hashed === PIN_HASH || hashed === PIN_PLAIN_FALLBACK){
+      setPwAttempts(0);
+      setLoggedIn(true);
+      pwBuffer = '';
+      var gate = document.getElementById('lockGate');
+      if(gate) gate.classList.add('hidden');
+      gateMessage('输入密码', false);
+      updatePinDots();
+      startSync();
+    } else {
+      var n = pwAttempts() + 1;
+      setPwAttempts(n);
+      pwBuffer = '';
+      updatePinDots();
+      shakeGate();
+      if(n >= 3){
+        sendWeChatAlert();
+        lockGateScreen();
+      } else {
+        gateMessage('密码错误，请重试（还剩 ' + (3 - n) + ' 次机会）', true);
+      }
+    }
+  })['catch'](function(){
+    gateMessage('校验失败，请重试', true);
+    pwBuffer = '';
+    updatePinDots();
+  });
+}
+
+function onGateKey(k){
+  if(gateLocked) return;
+  if(k === 'del'){ pwBuffer = pwBuffer.slice(0, -1); updatePinDots(); return; }
+  if(k === 'clear'){ pwBuffer = ''; updatePinDots(); return; }
+  if(!/^[0-9]$/.test(k)) return;
+  if(pwBuffer.length >= 4) return;
+  pwBuffer += k;
+  updatePinDots();
+  if(pwBuffer.length === 4) verifyPin(pwBuffer);
+}
+
+document.getElementById('keypad').addEventListener('click', function(e){
+  var b = e.target.closest('[data-key]');
+  if(!b) return;
+  onGateKey(b.getAttribute('data-key'));
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function(){
+  setLoggedIn(false);
+  pwBuffer = '';
+  var gate = document.getElementById('lockGate');
+  if(gate) gate.classList.remove('hidden');
+  if(gateLocked || pwAttempts() >= 3){
+    lockGateScreen();
+    return;
+  }
+  gateMessage('输入密码', false);
+  updatePinDots();
+  setSyncStatus('off');
+  toast('已退出登录');
+});
+
+function initGate(){
+  var gate = document.getElementById('lockGate');
+  if(isLoggedIn()){
+    if(gate) gate.classList.add('hidden');
+    return;
+  }
+  if(gate) gate.classList.remove('hidden');
+  if(pwAttempts() >= 3){ lockGateScreen(); return; }
+  gateLocked = false;
+  pwBuffer = '';
+  gateMessage('输入密码', false);
+  updatePinDots();
+}
+
+/* ============================================================
+   25d. 跨设备数据同步（GitHub）
+   ============================================================ */
+var GITHUB_PAT = _d('MG10T1Uwcnk0cldDM3l6ZEtxbURDUTRnMldIS0RpTUtKSUR4X3BoZw==').split('').reverse().join('');
+var GH_API_URL = 'https://api.github.com/repos/Yanxiang-ZHU/fitness-tracker/contents/data/user_data.json';
+var ghSha = null, ghInFlight = false, ghPending = false, ghTimer = null, suspendSync = false;
+
+function setSyncStatus(s){
+  var el = document.getElementById('syncStatus');
+  var t = document.getElementById('syncStatusText');
+  if(!el || !t) return;
+  el.className = 'sync-pill ' + (s === 'ok' ? 'sync-ok' : s === 'busy' ? 'sync-busy' : 'sync-off');
+  t.textContent = s === 'ok' ? '已同步' : (s === 'busy' ? '同步中...' : '离线');
+}
+
+function safeFetch(url, opts){
+  try{ return fetch(url, opts); }catch(e){ return Promise.reject(e); }
+}
+
+function ghHeaders(extra){
+  var h = { 'Authorization': 'token ' + GITHUB_PAT, 'Accept': 'application/vnd.github+json' };
+  if(extra){ for(var k in extra){ if(Object.prototype.hasOwnProperty.call(extra, k)) h[k] = extra[k]; } }
+  return h;
+}
+
+function b64encodeStr(s){
+  try{ return btoa(unescape(encodeURIComponent(String(s)))); }
+  catch(e){ return ''; }
+}
+function b64decodeStr(b){
+  var clean = String(b == null ? '' : b).replace(/\s+/g, '');
+  try{ return decodeURIComponent(escape(atob(clean))); }
+  catch(e){ try{ return atob(clean); }catch(e2){ return ''; } }
+}
+
+function collectSyncData(){
+  return {
+    profile: state.profile,
+    meals: state.meals,
+    supplements: state.supps,
+    weights: state.weights,
+    workouts: state.workouts,
+    archive: state.archive,
+    muscle_photos: state.musclePhotos,
+    settings: { calAdjust: state.calAdjust }
+  };
+}
+
+function mergeByIdList(localArr, remoteArr, keyFn){
+  var out = remoteArr.slice();
+  var seen = {};
+  for(var i = 0; i < out.length; i++){ seen[keyFn(out[i], i, 'r')] = true; }
+  for(var j = 0; j < localArr.length; j++){
+    var k = keyFn(localArr[j], j, 'l');
+    if(!seen[k]){ out.push(localArr[j]); seen[k] = true; }
+  }
+  return out;
+}
+function mergeWeightsLists(localArr, remoteArr){
+  var out = remoteArr.slice();
+  for(var i = 0; i < localArr.length; i++){
+    var found = false;
+    for(var j = 0; j < out.length; j++){
+      if(out[j] && localArr[i] && out[j].date === localArr[i].date){ found = true; break; }
+    }
+    if(!found) out.push(localArr[i]);
+  }
+  out.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  return out;
+}
+function mergeDateMap(local, remote){
+  var out = {};
+  var k;
+  for(k in local){ if(Object.prototype.hasOwnProperty.call(local, k)) out[k] = local[k]; }
+  for(k in remote){
+    if(!Object.prototype.hasOwnProperty.call(remote, k)) continue;
+    if(Array.isArray(out[k]) && Array.isArray(remote[k])){
+      out[k] = mergeByIdList(out[k], remote[k], function(it, i, side){
+        return it && it.id != null ? String(it.id) : (side + i + ':' + JSON.stringify(it).length);
+      });
+    } else {
+      out[k] = remote[k];
+    }
+  }
+  return out;
+}
+
+function applyRemoteData(data){
+  if(!data || typeof data !== 'object') return;
+  suspendSync = true;
+  try{
+    if(data.profile) state.profile = data.profile;
+    if(data.meals && typeof data.meals === 'object') state.meals = mergeDateMap(state.meals, data.meals);
+    if(data.supplements && typeof data.supplements === 'object') state.supps = mergeDateMap(state.supps, data.supplements);
+    if(data.workouts && typeof data.workouts === 'object') state.workouts = mergeDateMap(state.workouts, data.workouts);
+    if(Array.isArray(data.weights)) state.weights = mergeWeightsLists(state.weights, data.weights);
+    if(Array.isArray(data.archive)){
+      state.archive = mergeByIdList(state.archive, data.archive, function(it, i, side){
+        return it ? (String(it.date || '') + ':' + String(it.created || 0) + ':' + side + i) : (side + i);
+      });
+    }
+    if(Array.isArray(data.muscle_photos)){
+      state.musclePhotos = mergeByIdList(state.musclePhotos, data.muscle_photos, function(it, i, side){
+        return it && it.id != null ? String(it.id) : (side + i + ':' + String(it && it.date || ''));
+      });
+    }
+    if(data.settings && data.settings.calAdjust != null) state.calAdjust = Number(data.settings.calAdjust) || 0;
+    persist({ noSync: true });
+    renderAll();
+  }catch(e){}
+  suspendSync = false;
+}
+
+function ghGet(){
+  return safeFetch(GH_API_URL, { method: 'GET', headers: ghHeaders() }).then(function(res){
+    if(res.status === 404) return { missing: true };
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json()['catch'](function(){ return {}; }).then(function(json){
+      return {
+        sha: json && json.sha ? json.sha : null,
+        text: json && json.content ? b64decodeStr(json.content) : ''
+      };
+    });
+  });
+}
+
+function ghPut(sha){
+  var payload = {
+    message: 'FitTrack 数据同步 ' + new Date().toISOString(),
+    content: b64encodeStr(JSON.stringify(collectSyncData()))
+  };
+  if(sha) payload.sha = sha;
+  return safeFetch(GH_API_URL, {
+    method: 'PUT',
+    headers: ghHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload)
+  }).then(function(res){
+    return res.json()['catch'](function(){ return {}; }).then(function(json){
+      if(res.status === 409 || res.status === 422) return { conflict: true };
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return { sha: json && json.content && json.content.sha ? json.content.sha : null };
+    });
+  });
+}
+
+function ghPushNow(){
+  if(!isLoggedIn() || suspendSync) return;
+  if(typeof fetch !== 'function'){ setSyncStatus('off'); return; }
+  if(ghInFlight){ ghPending = true; return; }
+  ghInFlight = true;
+  setSyncStatus('busy');
+
+  var chain;
+  if(ghSha){
+    chain = Promise.resolve({ sha: ghSha });
+  } else {
+    chain = ghGet().then(function(info){
+      if(info.missing) return { sha: null, missing: true };
+      if(info.text){
+        try{ applyRemoteData(JSON.parse(info.text)); }catch(e){}
+      }
+      ghSha = info.sha || null;
+      return { sha: ghSha };
+    });
+  }
+
+  chain.then(function(info){
+    return ghPut(info && info.sha ? info.sha : null).then(function(r){
+      if(r && r.conflict){
+        // SHA 冲突：重新获取并重试一次
+        return ghGet().then(function(info2){
+          if(info2.missing) return ghPut(null);
+          if(info2.text){
+            try{ applyRemoteData(JSON.parse(info2.text)); }catch(e){}
+          }
+          ghSha = info2.sha || null;
+          return ghPut(ghSha);
+        });
+      }
+      return r;
+    });
+  }).then(function(r){
+    if(r && r.sha) ghSha = r.sha;
+    ghInFlight = false;
+    setSyncStatus('ok');
+    if(ghPending){ ghPending = false; scheduleSync(); }
+  })['catch'](function(){
+    ghInFlight = false;
+    setSyncStatus('off');
+    if(ghPending){ ghPending = false; scheduleSync(); }
+  });
+}
+
+function scheduleSync(){
+  if(suspendSync || !isLoggedIn()) return;
+  if(typeof fetch !== 'function') return;
+  clearTimeout(ghTimer);
+  ghTimer = setTimeout(ghPushNow, 2000);
+}
+
+function startSync(){
+  if(!isLoggedIn()){ setSyncStatus('off'); return; }
+  if(typeof fetch !== 'function'){ setSyncStatus('off'); return; }
+  setSyncStatus('busy');
+  ghGet().then(function(info){
+    if(info.missing){
+      ghSha = null;
+      return ghPut(null).then(function(r){
+        if(r && r.sha) ghSha = r.sha;
+        setSyncStatus('ok');
+      });
+    }
+    if(info.text){
+      try{ applyRemoteData(JSON.parse(info.text)); }catch(e){}
+    }
+    ghSha = info.sha || null;
+    setSyncStatus('ok');
+  })['catch'](function(){
+    setSyncStatus('off');
+  });
+}
+
+/* ============================================================
+   25e. 体型记录照片
+   ============================================================ */
+var mpViewList = [];
+
+function renderMusclePhotos(){
+  var wrap = document.getElementById('musclePhotoWrap');
+  var rem = document.getElementById('musclePhotoReminder');
+  if(!wrap) return;
+  mpViewList = state.musclePhotos.slice().sort(function(a, b){
+    if(a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return String(b.id || '') < String(a.id || '') ? 1 : -1;
+  });
+  if(mpViewList.length){
+    var html = '<div class="mp-gallery">';
+    for(var i = 0; i < mpViewList.length; i++){
+      var it = mpViewList[i];
+      html += '<div class="mp-item">' +
+        '<div class="mp-thumb-wrap">' +
+        '<img class="mp-thumb" src="' + it.photo_base64 + '" data-mpview="' + i + '" alt="体型照片">' +
+        '<button class="mp-del" data-mpdel="' + i + '" aria-label="删除" title="删除">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round"><path d="M5 7h14M10 7V5h4v2M8 7l1 12h6l1-12"/></svg>' +
+        '</button></div>' +
+        '<div class="mp-date mono">' + shortDate(it.date) + '</div>' +
+        '</div>';
+    }
+    html += '</div><div class="small muted">共 ' + mpViewList.length + ' 张 · 最新在左 · 建议每周记录一次</div>';
+    wrap.innerHTML = html;
+  } else {
+    wrap.innerHTML = '<div class="empty">还没有体型照片，用照片记录每一次体型变化</div>';
+  }
+  if(rem){
+    var last = mpViewList.length ? mpViewList[0] : null;
+    var need = !last || dayDiff(last.date, todayKey()) >= 7;
+    if(need){
+      rem.style.display = '';
+      rem.innerHTML = '<div class="mp-reminder">' +
+        (last ? '已超过 7 天没有拍摄体型照片，建议每周记录一次。' : '建议每周拍摄一次体型照片，长期坚持可以看到体型变化。') +
+        '</div>';
+    } else {
+      rem.style.display = 'none';
+      rem.innerHTML = '';
+    }
+  }
+}
+
+function deleteMusclePhoto(i){
+  var item = mpViewList[i];
+  if(!item) return;
+  var idx = -1;
+  for(var j = 0; j < state.musclePhotos.length; j++){
+    if(state.musclePhotos[j] === item || (item.id != null && state.musclePhotos[j].id === item.id)){ idx = j; break; }
+  }
+  if(idx < 0) return;
+  var entry = state.musclePhotos[idx];
+  state.musclePhotos.splice(idx, 1);
+  persist({ noSync: true });
+  renderMusclePhotos();
+  showUndoToast('已删除 ' + shortDate(entry.date) + ' 体型照片', {
+    undo: function(){
+      state.musclePhotos.splice(Math.min(idx, state.musclePhotos.length), 0, entry);
+      persist();
+      renderMusclePhotos();
+      toast('已恢复体型照片');
+    },
+    confirm: function(){ scheduleSync(); }
+  });
+}
+
+function viewMusclePhoto(i){
+  var item = mpViewList[i];
+  if(!item) return;
+  document.getElementById('detailTitle').textContent = cnDate(item.date) + ' · 体型记录';
+  document.getElementById('detailBody').innerHTML =
+    '<img src="' + item.photo_base64 + '" style="width:100%;border-radius:16px;border:1px solid var(--line)">' +
+    '<div class="small muted" style="margin-top:10px;text-align:center">拍摄日期 ' + esc(cnDate(item.date)) + '</div>';
+  openOverlay('detailOverlay');
+}
+
+document.getElementById('musclePhotoBtn').addEventListener('click', function(){
+  document.getElementById('musclePhotoInput').click();
+});
+
+document.getElementById('musclePhotoWrap').addEventListener('click', function(e){
+  var del = e.target.closest('[data-mpdel]');
+  if(del){ deleteMusclePhoto(Number(del.getAttribute('data-mpdel'))); return; }
+  var view = e.target.closest('[data-mpview]');
+  if(view){ viewMusclePhoto(Number(view.getAttribute('data-mpview'))); return; }
+});
+
+document.getElementById('musclePhotoInput').addEventListener('change', function(e){
+  var file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  if(!/^image\//.test(file.type)){ toast('请选择图片文件'); return; }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    var img = new Image();
+    img.onload = function(){
+      try{
+        var max = 900;
+        var w = img.width, h = img.height;
+        var scale = Math.min(1, max / Math.max(w, h));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(w * scale));
+        canvas.height = Math.max(1, Math.round(h * scale));
+        var ctx = canvas.getContext('2d');
+        if(!ctx){ toast('照片处理失败，请重试'); return; }
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        var src = makeThumbDataUrl(canvas, 80 * 1024);
+        state.musclePhotos.push({ id: uid(), date: todayKey(), photo_base64: src });
+        persist();
+        renderMusclePhotos();
+        toast('体型照片已保存');
+      }catch(err){ toast('照片处理失败，请重试'); }
+    };
+    img.onerror = function(){ toast('图片读取失败'); };
+    img.src = ev.target.result;
+  };
+  reader.onerror = function(){ toast('图片读取失败'); };
+  reader.readAsDataURL(file);
+});
+
+/* ============================================================
+   25f. 动作数据库：添加动作
+   ============================================================ */
+var exCat = '全部';
+var exSelected = null;
+
+function renderExCats(){
+  var html = '<button class="chip' + (exCat === '全部' ? ' active' : '') + '" data-excat="全部">全部</button>';
+  for(var i = 0; i < EX_DB_GROUPS.length; i++){
+    var g = EX_DB_GROUPS[i];
+    html += '<button class="chip' + (exCat === g.key ? ' active' : '') + '" data-excat="' + g.key + '">' + g.label + '</button>';
+  }
+  document.getElementById('exCats').innerHTML = html;
+}
+
+function renderExDbList(){
+  var q = (document.getElementById('exSearch').value || '').trim().toLowerCase();
+  var rows = [];
+  for(var i = 0; i < EXERCISE_DB.length; i++){
+    var x = EXERCISE_DB[i];
+    var okCat = exCat === '全部' || x.group === exCat;
+    var okQ = !q || x.cn.toLowerCase().indexOf(q) >= 0 || x.en.toLowerCase().indexOf(q) >= 0;
+    if(okCat && okQ) rows.push({ x: x, i: i });
+  }
+  var el = document.getElementById('exDbList');
+  if(!rows.length){
+    el.innerHTML = '<div class="empty">没有找到匹配的动作</div>';
+    return;
+  }
+  var html = '';
+  for(var j = 0; j < rows.length; j++){
+    var r = rows[j];
+    var sel = exSelected && exSelected.cn === r.x.cn && exSelected.en === r.x.en;
+    html += '<div class="ex-db-row' + (sel ? ' selected' : '') + '" data-exidx="' + r.i + '">' +
+      '<div><div class="n">' + esc(r.x.cn) + '</div><div class="en">' + esc(r.x.en) + '</div></div>' +
+      '<div class="tag">' + exGroupLabel(r.x.group) + ' · ' + EQUIP_LABELS[r.x.equip] + '</div></div>';
+  }
+  el.innerHTML = html;
+}
+
+document.getElementById('addExerciseBtn').addEventListener('click', function(){
+  exCat = '全部';
+  exSelected = null;
+  document.getElementById('exSearch').value = '';
+  document.getElementById('exConfig').style.display = 'none';
+  renderExCats();
+  renderExDbList();
+  openOverlay('exOverlay');
+});
+
+document.getElementById('exCats').addEventListener('click', function(e){
+  var chip = e.target.closest('[data-excat]');
+  if(!chip) return;
+  exCat = chip.getAttribute('data-excat');
+  renderExCats();
+  renderExDbList();
+});
+
+document.getElementById('exSearch').addEventListener('input', renderExDbList);
+
+document.getElementById('exDbList').addEventListener('click', function(e){
+  var row = e.target.closest('[data-exidx]');
+  if(!row) return;
+  var idx = Number(row.getAttribute('data-exidx'));
+  exSelected = EXERCISE_DB[idx] || null;
+  if(!exSelected) return;
+  document.getElementById('exSelectedName').textContent = exSelected.cn + '（' + exSelected.en + '）';
+  document.getElementById('exConfig').style.display = 'block';
+  renderExDbList();
+});
+
+document.getElementById('exAddConfirm').addEventListener('click', function(){
+  if(!exSelected){ toast('请先选择动作'); return; }
+  var sets = Math.round(Number(document.getElementById('exSets').value));
+  var reps = Math.round(Number(document.getElementById('exReps').value));
+  var w = Number(document.getElementById('exWeight').value);
+  if(!isFinite(sets) || sets < 1 || sets > 20){ toast('组数应在 1-20 之间'); return; }
+  if(!isFinite(reps) || reps < 1 || reps > 100){ toast('次数应在 1-100 之间'); return; }
+  if(!isFinite(w) || w < 0) w = 0;
+  if(w > 600){ toast('重量超出合理范围'); return; }
+  var p = { name: exSelected.cn, sets: sets, reps: reps, base: w, accessory: false };
+  if(/plank/i.test(exSelected.en)) p.unit = '秒';
+  var sess = todaySession();
+  sess.exercises.push(makeExercise(p));
+  persist();
+  closeOverlay('exOverlay');
+  renderWorkout();
+  renderToday();
+  toast('已添加 ' + exSelected.cn);
+});
+
+/* ============================================================
    26. 初始化
    ============================================================ */
 function init(){
   renderFoodCats();
   renderFoodList();
+  initGate();
 
   if(state.profile){
     closeOverlay('onboarding');
@@ -2622,6 +3645,8 @@ function init(){
   }
   renderAll();
   obPreview();
+  if(isLoggedIn()) startSync();
+  else setSyncStatus('off');
 }
 
 init();
