@@ -510,8 +510,8 @@ select.input{appearance:none}
       </div>
       <div class="bar goal" style="height:10px"><i id="weightBarFill" style="width:0%"></i></div>
       <div class="row" style="margin-top:10px">
-        <div class="small muted">当前 <b class="mono" id="curWeight" style="color:var(--text)">--</b> 磅</div>
-        <div class="small muted">目标 <b class="mono" id="goalWeight" style="color:var(--text)">--</b> 磅</div>
+        <div class="small muted">当前 <b class="mono" id="curWeight" style="color:var(--text)">--</b> kg</div>
+        <div class="small muted">目标 <b class="mono" id="goalWeight" style="color:var(--text)">--</b> kg</div>
       </div>
     </div>
 
@@ -762,17 +762,17 @@ select.input{appearance:none}
     </div>
 
     <div class="grid-2">
-      <div class="stat"><div class="k">当前体重</div><div class="v mono" id="statWeight">--<small>磅</small></div></div>
-      <div class="stat"><div class="k">本周平均</div><div class="v mono" id="statWeekAvg">--<small>磅</small></div></div>
-      <div class="stat"><div class="k">增重速率</div><div class="v mono" id="statRate">--<small>磅/周</small></div></div>
-      <div class="stat"><div class="k">距离目标</div><div class="v mono" id="statToGoal">--<small>磅</small></div></div>
+      <div class="stat"><div class="k">当前体重</div><div class="v mono" id="statWeight">--<small>kg</small></div></div>
+      <div class="stat"><div class="k">本周平均</div><div class="v mono" id="statWeekAvg">--<small>kg</small></div></div>
+      <div class="stat"><div class="k">增重速率</div><div class="v mono" id="statRate">--<small>kg/周</small></div></div>
+      <div class="stat"><div class="k">距离目标</div><div class="v mono" id="statToGoal">--<small>kg</small></div></div>
     </div>
 
     <div class="card">
       <div class="card-title">目标进度</div>
       <div class="row" style="margin-bottom:10px">
-        <div class="small muted">起点 <b class="mono" id="progStart">--</b> 磅</div>
-        <div class="small muted">目标 <b class="mono" id="progGoal">--</b> 磅</div>
+        <div class="small muted">起点 <b class="mono" id="progStart">--</b> kg</div>
+        <div class="small muted">目标 <b class="mono" id="progGoal">--</b> kg</div>
       </div>
       <div class="bar goal" style="height:12px"><i id="progBarFill" style="width:0%"></i></div>
       <div class="small muted" style="margin-top:9px" id="progText">--</div>
@@ -906,7 +906,7 @@ select.input{appearance:none}
       <div class="sheet-title">记录体重</div>
       <button class="close-btn" data-close="weightOverlay"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
-    <div class="field"><label>体重 (磅)</label><input class="input mono" id="weightInput" type="number" inputmode="decimal" step="0.1" min="55" max="550"></div>
+    <div class="field"><label>体重 (kg)</label><input class="input mono" id="weightInput" type="number" inputmode="decimal" step="0.1" min="25" max="250"></div>
     <div class="field"><label>日期</label><input class="input mono" id="weightDate" type="date"></div>
     <button class="btn btn-primary btn-block" id="saveWeight">保存记录</button>
     <div class="small muted" style="text-align:center;margin-top:12px">建议每天早晨空腹称重，数据更稳定</div>
@@ -950,11 +950,11 @@ select.input{appearance:none}
     <div class="ob-sub">填写基础信息，自动计算每日热量与营养目标</div>
     <div class="grid-2">
       <div class="field"><label>身高（cm）</label><input class="input mono" id="obHeight" type="number" inputmode="decimal" placeholder="175"></div>
-      <div class="field"><label>当前体重 (磅)</label><input class="input mono" id="obWeight" type="number" inputmode="decimal" step="0.1" placeholder="128"></div>
+      <div class="field"><label>当前体重 (kg)</label><input class="input mono" id="obWeight" type="number" inputmode="decimal" step="0.1" placeholder="58"></div>
     </div>
     <div class="grid-2">
       <div class="field"><label>年龄</label><input class="input mono" id="obAge" type="number" inputmode="numeric" placeholder="23"></div>
-      <div class="field"><label>目标体重 (磅)</label><input class="input mono" id="obGoal" type="number" inputmode="decimal" step="0.1" placeholder="150"></div>
+      <div class="field"><label>目标体重 (kg)</label><input class="input mono" id="obGoal" type="number" inputmode="decimal" step="0.1" placeholder="68"></div>
     </div>
     <div class="field">
       <label>每周训练天数</label>
@@ -1061,7 +1061,7 @@ select.input{appearance:none}
       <div class="grid-3">
         <div class="field"><label>组数</label><input class="input mono" id="exSets" type="number" inputmode="numeric" min="1" max="20" value="3"></div>
         <div class="field"><label>次数</label><input class="input mono" id="exReps" type="number" inputmode="numeric" min="1" max="100" value="10"></div>
-        <div class="field"><label>重量 (kg)</label><input class="input mono" id="exWeight" type="number" inputmode="decimal" min="0" max="600" value="20"></div>
+        <div class="field"><label>重量 (磅)</label><input class="input mono" id="exWeight" type="number" inputmode="decimal" min="0" max="1500" value="45"></div>
       </div>
       <button class="btn btn-primary btn-block" id="exAddConfirm">添加到今日训练</button>
     </div>
@@ -1109,35 +1109,60 @@ if(!Array.isArray(state.musclePhotos)) state.musclePhotos = [];
 if(!Array.isArray(state.strength)) state.strength = [];
 if(!Array.isArray(state.strengthTracked)) state.strengthTracked = ['杠铃卧推','杠铃深蹲','硬拉','杠铃肩推'];
 
-/* 单位换算与旧数据迁移：体重统一以磅（lbs）存储与展示，
-   仅在 TDEE / 宏量计算时换算回公斤（1 kg = 2.20462 lbs） */
+/* 单位换算与旧数据迁移：体重统一以公斤（kg）存储与展示；
+   训练/力量重量以磅（lbs）存储与展示（1 kg = 2.20462 lbs） */
 function kgToLbs(v){ return Math.round(Number(v) * KG_TO_LBS * 10) / 10; }
-function lbsToKg(v){ return Number(v) / KG_TO_LBS; }
-function looksLikeKg(v){ return Number(v) > 0 && Number(v) < 120; }
+function lbsToKg(v){ return Math.round(Number(v) / KG_TO_LBS * 10) / 10; }
+function looksLikeLbs(v){ return Number(v) > 120; }
 
 function normalizeWeightEntry(e){
   if(!e || typeof e !== 'object') return e;
-  if(e.lbs != null) return { date: e.date, lbs: Math.round(Number(e.lbs) * 10) / 10 };
-  var v = Number(e.kg);
+  if(e.kg != null) return { date: e.date, kg: Math.round(Number(e.kg) * 10) / 10 };
+  var v = Number(e.lbs);
   if(!isFinite(v)) v = 0;
-  return { date: e.date, lbs: looksLikeKg(v) ? kgToLbs(v) : Math.round(v * 10) / 10 };
+  if(looksLikeLbs(v)) v = lbsToKg(v); /* 旧的磅体重换算回公斤 */
+  return { date: e.date, kg: Math.round(v * 10) / 10 };
+}
+
+/* 旧训练记录的组重量为 kg，换算为磅并加 weightUnit 标记防止重复换算 */
+function normalizeSessionUnits(s){
+  if(!s || typeof s !== 'object' || s.weightUnit === 'lbs') return false;
+  var list = s.exercises || [];
+  for(var i = 0; i < list.length; i++){
+    var ex = list[i];
+    if(ex.weight != null && isFinite(Number(ex.weight))) ex.weight = kgToLbs(ex.weight);
+    if(ex.lastInfo && ex.lastInfo.weight != null) ex.lastInfo.weight = kgToLbs(ex.lastInfo.weight);
+    var sets = ex.sets || [];
+    for(var j = 0; j < sets.length; j++){
+      if(sets[j].weight != null && isFinite(Number(sets[j].weight))) sets[j].weight = kgToLbs(sets[j].weight);
+    }
+  }
+  s.weightUnit = 'lbs';
+  return true;
 }
 
 function normalizeUnits(){
   var changed = false;
-  if(state.profile && state.profile.unit !== 'lbs'){
-    if(looksLikeKg(state.profile.weight)){ state.profile.weight = kgToLbs(state.profile.weight); }
-    if(looksLikeKg(state.profile.goalWeight)){ state.profile.goalWeight = kgToLbs(state.profile.goalWeight); }
-    state.profile.unit = 'lbs';
+  if(state.profile && state.profile.unit !== 'kg'){
+    if(looksLikeLbs(state.profile.weight)){ state.profile.weight = lbsToKg(state.profile.weight); }
+    if(looksLikeLbs(state.profile.goalWeight)){ state.profile.goalWeight = lbsToKg(state.profile.goalWeight); }
+    state.profile.unit = 'kg';
     changed = true;
   }
   for(var i = 0; i < state.weights.length; i++){
     var e = state.weights[i];
-    if(!e || e.lbs == null){ state.weights[i] = normalizeWeightEntry(e); changed = true; }
+    if(!e || e.kg == null){ state.weights[i] = normalizeWeightEntry(e); changed = true; }
   }
+  var sessList = [];
+  var wkeys = Object.keys(state.workouts || {});
+  for(var j = 0; j < wkeys.length; j++){ sessList.push(state.workouts[wkeys[j]]); }
+  for(var k = 0; k < (state.archive || []).length; k++){ sessList.push(state.archive[k]); }
+  for(var m = 0; m < sessList.length; m++){ if(normalizeSessionUnits(sessList[m])) changed = true; }
   if(changed){
     save('profile', state.profile);
     save('weights', state.weights);
+    save('workouts', state.workouts);
+    save('archive', state.archive);
   }
 }
 normalizeUnits();
@@ -1257,48 +1282,48 @@ var FOODS = [
 var FOOD_CATS = ['全部','高蛋白','肉蛋','主食','蔬果','乳饮','补剂','其他'];
 
 /* ============================================================
-   3. 训练计划（肌群分化：胸 / 肩 / 腿 / 背）
+   3. 训练计划（肌群分化：胸 / 肩 / 腿 / 背；重量单位：磅 lbs）
    ============================================================ */
 var PLAN = {
   chest: {
     name: '胸日',
     exercises: [
-      { name:'杠铃卧推', sets:4, reps:8, base:40 },
-      { name:'上斜哑铃卧推', sets:4, reps:10, base:16 },
-      { name:'哑铃飞鸟', sets:3, reps:12, base:12 },
-      { name:'绳索夹胸', sets:3, reps:12, base:25 },
+      { name:'杠铃卧推', sets:4, reps:8, base:88.2 },
+      { name:'上斜哑铃卧推', sets:4, reps:10, base:35.3 },
+      { name:'哑铃飞鸟', sets:3, reps:12, base:26.5 },
+      { name:'绳索夹胸', sets:3, reps:12, base:55.1 },
       { name:'双杠臂屈伸', sets:3, reps:10, base:0 }
     ]
   },
   shoulders: {
     name: '肩日',
     exercises: [
-      { name:'杠铃肩推', sets:4, reps:8, base:25 },
-      { name:'哑铃侧平举', sets:4, reps:15, base:8 },
-      { name:'哑铃前平举', sets:3, reps:12, base:6 },
-      { name:'反向飞鸟', sets:3, reps:15, base:8 },
-      { name:'面拉', sets:3, reps:15, base:25 }
+      { name:'杠铃肩推', sets:4, reps:8, base:55.1 },
+      { name:'哑铃侧平举', sets:4, reps:15, base:17.6 },
+      { name:'哑铃前平举', sets:3, reps:12, base:13.2 },
+      { name:'反向飞鸟', sets:3, reps:15, base:17.6 },
+      { name:'面拉', sets:3, reps:15, base:55.1 }
     ]
   },
   legs: {
     name: '腿日',
     exercises: [
-      { name:'杠铃深蹲', sets:4, reps:8, base:50 },
-      { name:'罗马尼亚硬拉', sets:3, reps:10, base:40 },
-      { name:'腿举', sets:4, reps:12, base:80 },
-      { name:'腿弯举', sets:3, reps:12, base:30 },
-      { name:'腿屈伸', sets:3, reps:12, base:30 },
-      { name:'站姿提踵', sets:4, reps:15, base:40 }
+      { name:'杠铃深蹲', sets:4, reps:8, base:110.2 },
+      { name:'罗马尼亚硬拉', sets:3, reps:10, base:88.2 },
+      { name:'腿举', sets:4, reps:12, base:176.4 },
+      { name:'腿弯举', sets:3, reps:12, base:66.1 },
+      { name:'腿屈伸', sets:3, reps:12, base:66.1 },
+      { name:'站姿提踵', sets:4, reps:15, base:88.2 }
     ]
   },
   back: {
     name: '背日',
     exercises: [
-      { name:'硬拉', sets:3, reps:8, base:60 },
-      { name:'杠铃划船', sets:4, reps:8, base:40 },
+      { name:'硬拉', sets:3, reps:8, base:132.3 },
+      { name:'杠铃划船', sets:4, reps:8, base:88.2 },
       { name:'引体向上', sets:4, reps:8, base:0 },
-      { name:'高位下拉', sets:3, reps:12, base:40 },
-      { name:'坐姿划船', sets:3, reps:12, base:40 }
+      { name:'高位下拉', sets:3, reps:12, base:88.2 },
+      { name:'坐姿划船', sets:3, reps:12, base:88.2 }
     ]
   }
 };
@@ -1313,17 +1338,17 @@ function planName(type){
 /* 每日辅助训练：二头 + 腹部，按打卡次数轮换 */
 var ACCESSORIES = {
   biceps: [
-    { name:'杠铃弯举', sets:3, reps:12, base:15 },
-    { name:'锤式弯举', sets:3, reps:12, base:12 },
-    { name:'上斜哑铃弯举', sets:3, reps:12, base:10 },
-    { name:'集中弯举', sets:3, reps:12, base:10 }
+    { name:'杠铃弯举', sets:3, reps:12, base:33.1 },
+    { name:'锤式弯举', sets:3, reps:12, base:26.5 },
+    { name:'上斜哑铃弯举', sets:3, reps:12, base:22 },
+    { name:'集中弯举', sets:3, reps:12, base:22 }
   ],
   abs: [
-    { name:'绳索卷腹', sets:3, reps:15, base:25 },
+    { name:'绳索卷腹', sets:3, reps:15, base:55.1 },
     { name:'悬垂举腿', sets:3, reps:12, base:0 },
     { name:'平板支撑', sets:3, reps:60, base:0, unit:'秒' },
     { name:'腹肌轮', sets:3, reps:10, base:0 },
-    { name:'俄罗斯转体', sets:3, reps:20, base:5 }
+    { name:'俄罗斯转体', sets:3, reps:20, base:11 }
   ]
 };
 
@@ -1459,13 +1484,12 @@ function exGroupLabel(key){
 var ACT_MAP = { 3:1.45, 4:1.55, 5:1.65, 6:1.75 };
 
 function latestWeight(){
-  if(state.weights.length) return Number(state.weights[state.weights.length - 1].lbs) || 0;
+  if(state.weights.length) return Number(state.weights[state.weights.length - 1].kg) || 0;
   return state.profile ? Number(state.profile.weight) : 0;
 }
 
 function calcTargetsFrom(p, weight, calAdjust){
-  var wLbs = Number(weight) || Number(p.weight) || 132;
-  var w = lbsToKg(wLbs);
+  var w = Number(weight) || Number(p.weight) || 60;
   var bmr = 10 * w + 6.25 * Number(p.height) - 5 * Number(p.age) + 5;
   var tdee = bmr * (ACT_MAP[p.trainingDays] || 1.55);
   var calories = Math.round((tdee + 400 + (calAdjust || 0)) / 10) * 10;
@@ -1576,7 +1600,7 @@ function suggestedType(){
 function makeExercise(p){
   var last = lastPerformance(p.name);
   var weight = p.base;
-  if(last && last.weight > 0) weight = last.complete ? last.weight + 2.5 : last.weight;
+  if(last && last.weight > 0) weight = last.complete ? last.weight + 5 : last.weight;
   if(isBodyweight(p.name) && !p.base) weight = 0;
   var sets = [];
   for(var s = 0; s < p.sets; s++){
@@ -1601,7 +1625,7 @@ function buildSession(type){
   }
   return {
     type: type, date: todayKey(), created: Date.now(),
-    completed: false, finishedAt: null, exercises: exs
+    completed: false, finishedAt: null, weightUnit: 'lbs', exercises: exs
   };
 }
 
@@ -1648,8 +1672,8 @@ function weeklyRate(){
   var recent = [], prev = [];
   for(var i = 0; i < ws.length; i++){
     var age = dayDiff(ws[i].date, today);
-    if(age >= 0 && age <= 6) recent.push(Number(ws[i].lbs));
-    else if(age >= 7 && age <= 13) prev.push(Number(ws[i].lbs));
+    if(age >= 0 && age <= 6) recent.push(Number(ws[i].kg));
+    else if(age >= 7 && age <= 13) prev.push(Number(ws[i].kg));
   }
   if(recent.length && prev.length){
     function avg(a){ var s = 0; for(var i = 0; i < a.length; i++) s += a[i]; return s / a.length; }
@@ -1658,7 +1682,7 @@ function weeklyRate(){
   var first = ws[0], last = ws[ws.length - 1];
   var span = dayDiff(first.date, last.date);
   if(span <= 0) return 0;
-  return (Number(last.lbs) - Number(first.lbs)) / (span / 7);
+  return (Number(last.kg) - Number(first.kg)) / (span / 7);
 }
 
 function weekAvgWeight(){
@@ -1666,7 +1690,7 @@ function weekAvgWeight(){
   var today = todayKey(), sum = 0, cnt = 0;
   for(var i = 0; i < ws.length; i++){
     var age = dayDiff(ws[i].date, today);
-    if(age >= 0 && age <= 6){ sum += Number(ws[i].lbs); cnt++; }
+    if(age >= 0 && age <= 6){ sum += Number(ws[i].kg); cnt++; }
   }
   return cnt ? sum / cnt : null;
 }
@@ -1725,11 +1749,11 @@ function renderToday(){
   document.getElementById('greetSub').textContent = cnDate(k) + ' ' + weekName(k) + ' · 坚持记录是增肌的第一步';
 
   var start = state.profile ? Number(state.profile.weight) : latestWeight();
-  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 22);
+  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 10);
   var cur = latestWeight();
   var span = goal - start;
   var pct = span !== 0 ? ((cur - start) / span) * 100 : 100;
-  document.getElementById('weightRange').textContent = num(start, 1) + ' → ' + num(goal, 1) + ' 磅';
+  document.getElementById('weightRange').textContent = num(start, 1) + ' → ' + num(goal, 1) + ' kg';
   document.getElementById('curWeight').textContent = num(cur, 1);
   document.getElementById('goalWeight').textContent = num(goal, 1);
   setBar('weightBarFill', pct);
@@ -1833,9 +1857,9 @@ function buildSuggestions(t, tot){
   }
   var rate = weeklyRate();
   if(rate != null){
-    if(rate < 0.55) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' 磅/周，低于目标，建议每日热量增加 200 千卡');
-    else if(rate > 1.1) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' 磅/周，偏快，建议每日热量减少 100 千卡以控制脂肪增长');
-    else lines.push('近两周增重速率 ' + rate.toFixed(2) + ' 磅/周，处于理想区间（0.55-1.1 磅/周），保持当前计划');
+    if(rate < 0.25) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' kg/周，低于目标，建议每日热量增加 200 千卡');
+    else if(rate > 0.5) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' kg/周，偏快，建议每日热量减少 100 千卡以控制脂肪增长');
+    else lines.push('近两周增重速率 ' + rate.toFixed(2) + ' kg/周，处于理想区间（0.25-0.5 kg/周），保持当前计划');
   }
   return lines.map(function(l){ return '<div style="margin-bottom:7px">' + esc(l) + '</div>'; }).join('');
 }
@@ -1861,8 +1885,8 @@ function renderWorkout(){
 
     var lastTxt = '';
     if(ex.lastInfo){
-      lastTxt = '上次 ' + shortDate(ex.lastInfo.date) + '：' + num(ex.lastInfo.weight, 1) + 'kg × ' + ex.lastInfo.reps + ' 次 × ' + ex.lastInfo.setsDone + ' 组';
-      if(ex.lastInfo.complete) lastTxt += '（已达成，本次加重 2.5kg）';
+      lastTxt = '上次 ' + shortDate(ex.lastInfo.date) + '：' + num(ex.lastInfo.weight, 1) + '磅 × ' + ex.lastInfo.reps + ' 次 × ' + ex.lastInfo.setsDone + ' 组';
+      if(ex.lastInfo.complete) lastTxt += '（已达成，本次加重 5磅）';
     } else {
       lastTxt = '暂无历史记录，从基础重量开始';
     }
@@ -1872,7 +1896,7 @@ function renderWorkout(){
     var cardHtml = '<div class="ex-card" data-ex="' + e + '">' +
       '<div class="ex-head"><div>' +
         '<div class="ex-name">' + esc(ex.name) + '</div>' +
-        '<div class="ex-sub">' + ex.targetSets + ' 组 × ' + ex.targetReps + unitTxt + (bw ? '（自重）' : ' · 当前 ' + num(ex.weight, 1) + 'kg') + '</div>' +
+        '<div class="ex-sub">' + ex.targetSets + ' 组 × ' + ex.targetReps + unitTxt + (bw ? '（自重）' : ' · 当前 ' + num(ex.weight, 1) + '磅') + '</div>' +
         '<div class="ex-last">' + esc(lastTxt) + '</div>' +
       '</div>' +
       (exDone === ex.sets.length && ex.sets.length > 0
@@ -1884,7 +1908,7 @@ function renderWorkout(){
       var set = ex.sets[st];
       cardHtml += '<div class="set-row' + (set.done ? ' done' : '') + '" data-ex="' + e + '" data-set="' + st + '">' +
         '<div class="set-idx">' + (st + 1) + '</div>' +
-        '<input class="set-input mono set-weight" type="number" inputmode="decimal" step="2.5" min="0" value="' + num(set.weight, 1) + '" data-ex="' + e + '" data-set="' + st + '"' + (bw ? ' disabled' : '') + '>' +
+        '<input class="set-input mono set-weight" type="number" inputmode="decimal" step="5" min="0" value="' + num(set.weight, 1) + '" data-ex="' + e + '" data-set="' + st + '"' + (bw ? ' disabled' : '') + '>' +
         '<input class="set-input mono set-reps" type="number" inputmode="numeric" step="1" min="0" value="' + num(set.reps) + '" data-ex="' + e + '" data-set="' + st + '">' +
         '<button class="set-check" data-check="' + e + '-' + st + '">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>' +
@@ -1944,7 +1968,7 @@ function renderWorkoutHistory(){
     }
     html += '<div class="hist-item"><div>' +
       '<div style="font-size:14px;font-weight:600">' + shortDate(it.k) + ' ' + weekName(it.k) + ' · ' + planName(it.s.type) + '</div>' +
-      '<div class="small muted">' + doneSets + ' 组 · 总容量 ' + sessionVolume(it.s).toLocaleString('en-US') + ' kg</div>' +
+      '<div class="small muted">' + doneSets + ' 组 · 总容量 ' + sessionVolume(it.s).toLocaleString('en-US') + ' 磅</div>' +
       '</div>' + (it.s.completed ? '<span class="badge ok">已打卡</span>' : '<span class="badge idle">未完成</span>') + '</div>';
   }
   document.getElementById('workoutHistory').innerHTML = html;
@@ -2053,15 +2077,15 @@ var weightChart = null;
 function renderProgress(){
   var ws = sortedWeights();
   var cur = latestWeight();
-  var start = state.profile ? Number(state.profile.weight) : (ws.length ? Number(ws[0].lbs) : 0);
-  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 22);
+  var start = state.profile ? Number(state.profile.weight) : (ws.length ? Number(ws[0].kg) : 0);
+  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 10);
 
-  document.getElementById('statWeight').innerHTML = num(cur, 1) + '<small>磅</small>';
+  document.getElementById('statWeight').innerHTML = num(cur, 1) + '<small>kg</small>';
   var wavg = weekAvgWeight();
-  document.getElementById('statWeekAvg').innerHTML = (wavg != null ? num(wavg, 1) : '--') + '<small>磅</small>';
+  document.getElementById('statWeekAvg').innerHTML = (wavg != null ? num(wavg, 1) : '--') + '<small>kg</small>';
   var rate = weeklyRate();
-  document.getElementById('statRate').innerHTML = (rate != null ? (rate > 0 ? '+' : '') + rate.toFixed(2) : '--') + '<small>磅/周</small>';
-  document.getElementById('statToGoal').innerHTML = num(Math.max(0, goal - cur), 1) + '<small>磅</small>';
+  document.getElementById('statRate').innerHTML = (rate != null ? (rate > 0 ? '+' : '') + rate.toFixed(2) : '--') + '<small>kg/周</small>';
+  document.getElementById('statToGoal').innerHTML = num(Math.max(0, goal - cur), 1) + '<small>kg</small>';
 
   document.getElementById('progStart').textContent = num(start, 1);
   document.getElementById('progGoal').textContent = num(goal, 1);
@@ -2069,7 +2093,7 @@ function renderProgress(){
   var pct = span > 0 ? ((cur - start) / span) * 100 : 100;
   setBar('progBarFill', pct);
   document.getElementById('progText').textContent = span > 0
-    ? ('已完成目标进度 ' + Math.max(0, Math.min(100, Math.round(pct))) + '%，距离目标还差 ' + num(Math.max(0, goal - cur), 1) + ' 磅')
+    ? ('已完成目标进度 ' + Math.max(0, Math.min(100, Math.round(pct))) + '%，距离目标还差 ' + num(Math.max(0, goal - cur), 1) + ' kg')
     : '目标设置需要调整，目标体重应高于起始体重';
 
   // 调节建议
@@ -2078,18 +2102,18 @@ function renderProgress(){
   if(rate == null){
     adjHtml = '体重数据不足（至少需要 2 条记录）。建议每天早晨空腹记录体重，系统会根据两周增重速率自动调节热量目标。';
     applyBtn.style.display = 'none';
-  } else if(rate < 0.55){
-    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' 磅/周</b>，低于目标区间（0.55-1.1 磅/周）。<br>建议每日热量 <b>+200 千卡</b>，优先增加碳水摄入。';
+  } else if(rate < 0.25){
+    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' kg/周</b>，低于目标区间（0.25-0.5 kg/周）。<br>建议每日热量 <b>+200 千卡</b>，优先增加碳水摄入。';
     applyBtn.style.display = '';
     applyBtn.setAttribute('data-delta', '200');
     applyBtn.textContent = '每日热量 +200 千卡';
-  } else if(rate > 1.1){
-    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' 磅/周</b>，高于目标区间（0.55-1.1 磅/周）。<br>建议每日热量 <b>-100 千卡</b>，避免脂肪增长过快。';
+  } else if(rate > 0.5){
+    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' kg/周</b>，高于目标区间（0.25-0.5 kg/周）。<br>建议每日热量 <b>-100 千卡</b>，避免脂肪增长过快。';
     applyBtn.style.display = '';
     applyBtn.setAttribute('data-delta', '-100');
     applyBtn.textContent = '每日热量 -100 千卡';
   } else {
-    adjHtml = '近两周增重速率 <b style="color:var(--success)">' + rate.toFixed(2) + ' 磅/周</b>，处于理想区间（0.55-1.1 磅/周），当前热量目标无需调整。';
+    adjHtml = '近两周增重速率 <b style="color:var(--success)">' + rate.toFixed(2) + ' kg/周</b>，处于理想区间（0.25-0.5 kg/周），当前热量目标无需调整。';
     applyBtn.style.display = 'none';
   }
   adjHtml += '<div class="small muted" style="margin-top:9px">当前目标热量：' + calcTargets().calories + ' 千卡' +
@@ -2110,7 +2134,7 @@ function renderProgress(){
     var rev = ws.slice().reverse();
     for(var i = 0; i < Math.min(10, rev.length); i++){
       html += '<div class="hist-item"><div class="small">' + cnDate(rev[i].date) + ' ' + weekName(rev[i].date) + '</div>' +
-        '<div class="mono" style="font-weight:700">' + num(rev[i].lbs, 1) + ' 磅</div></div>';
+        '<div class="mono" style="font-weight:700">' + num(rev[i].kg, 1) + ' kg</div></div>';
     }
     document.getElementById('weightHistory').innerHTML = html;
   } else {
@@ -2133,7 +2157,7 @@ function renderChart(ws, goal){
 
   var recent = ws.slice(-30);
   var labels = recent.map(function(x){ return shortDate(x.date); });
-  var data = recent.map(function(x){ return Number(x.lbs); });
+  var data = recent.map(function(x){ return Number(x.kg); });
   var goalData = recent.map(function(){ return goal; });
 
   var config = {
@@ -2142,7 +2166,7 @@ function renderChart(ws, goal){
       labels: labels,
       datasets: [
         {
-          label: '体重 (磅)',
+          label: '体重 (kg)',
           data: data,
           borderColor: '#22d3ee',
           backgroundColor: 'rgba(34,211,238,0.14)',
@@ -2253,7 +2277,7 @@ function strengthLogEntry(date, exercise, weightLbs, reps){
   return { pr: isPr, weight: weightLbs };
 }
 
-/* 训练完成后自动记录当日最大重量（训练组重量为 kg，记录为磅） */
+/* 训练完成后自动记录当日最大重量（训练组重量即为磅） */
 function autoLogStrength(sess, silent){
   if(!sess) return false;
   var date = sess.date || todayKey();
@@ -2269,7 +2293,7 @@ function autoLogStrength(sess, silent){
       if(w > maxW){ maxW = w; repsAtMax = Number(st.reps) || 0; }
     }
     if(maxW > 0){
-      var r = strengthLogEntry(date, ex.name, kgToLbs(maxW), repsAtMax);
+      var r = strengthLogEntry(date, ex.name, maxW, repsAtMax);
       if(r){
         changed = true;
         if(!silent && r.pr) toast('力量记录更新：' + ex.name + ' ' + r.weight + ' 磅（新纪录）');
@@ -2597,7 +2621,7 @@ document.getElementById('finishWorkout').addEventListener('click', function(){
       if(!ex.sets[s].done) allDone = false;
       if(Number(ex.sets[s].reps) < Number(ex.targetReps)) allRepsOk = false;
     }
-    if(allDone && allRepsOk && !isBodyweight(ex.name) && num(Number(ex.weight), 1) > 0) ups.push(ex.name + ' → ' + num(Number(ex.weight) + 2.5, 1) + 'kg');
+    if(allDone && allRepsOk && !isBodyweight(ex.name) && num(Number(ex.weight), 1) > 0) ups.push(ex.name + ' → ' + num(Number(ex.weight) + 5, 1) + '磅');
   }
   renderWorkout();
   renderToday();
@@ -3148,23 +3172,23 @@ function openWeightModal(){
   openOverlay('weightOverlay');
 }
 document.getElementById('saveWeight').addEventListener('click', function(){
-  var lbs = Number(document.getElementById('weightInput').value);
+  var kg = Number(document.getElementById('weightInput').value);
   var date = document.getElementById('weightDate').value || todayKey();
-  if(!isFinite(lbs) || lbs < 55 || lbs > 550){ toast('请输入 55-550 之间的体重（磅）'); return; }
+  if(!isFinite(kg) || kg < 25 || kg > 250){ toast('请输入 25-250 之间的体重（kg）'); return; }
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){ toast('请选择有效日期'); return; }
-  lbs = Math.round(lbs * 10) / 10;
+  kg = Math.round(kg * 10) / 10;
 
   var found = false;
   for(var i = 0; i < state.weights.length; i++){
-    if(state.weights[i].date === date){ state.weights[i].lbs = lbs; found = true; break; }
+    if(state.weights[i].date === date){ state.weights[i].kg = kg; found = true; break; }
   }
-  if(!found) state.weights.push({ date: date, lbs: lbs });
+  if(!found) state.weights.push({ date: date, kg: kg });
   state.weights.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
-  if(state.profile && date === todayKey()) state.profile.weight = lbs;
+  if(state.profile && date === todayKey()) state.profile.weight = kg;
   persist();
   closeOverlay('weightOverlay');
   renderAll();
-  toast('体重已记录：' + lbs + ' 磅');
+  toast('体重已记录：' + kg + ' kg');
 });
 
 /* ============================================================
@@ -3324,7 +3348,7 @@ function obPreview(){
   var h = Number(document.getElementById('obHeight').value);
   var w = Number(document.getElementById('obWeight').value);
   var age = Number(document.getElementById('obAge').value);
-  if(!isFinite(h) || h < 100 || h > 250 || !isFinite(w) || w < 55 || w > 550 || !isFinite(age) || age < 10 || age > 100){
+  if(!isFinite(h) || h < 100 || h > 250 || !isFinite(w) || w < 25 || w > 250 || !isFinite(age) || age < 10 || age > 100){
     document.getElementById('obCal').textContent = '--';
     document.getElementById('obProtein').textContent = '--';
     document.getElementById('obCarbs').textContent = '--';
@@ -3358,18 +3382,18 @@ document.getElementById('obSubmit').addEventListener('click', function(){
   var age = Number(document.getElementById('obAge').value);
   var goal = Number(document.getElementById('obGoal').value);
   if(!isFinite(h) || h < 100 || h > 250){ toast('请输入 100-250 之间的身高'); return; }
-  if(!isFinite(w) || w < 55 || w > 550){ toast('请输入 55-550 之间的体重（磅）'); return; }
+  if(!isFinite(w) || w < 25 || w > 250){ toast('请输入 25-250 之间的体重（kg）'); return; }
   if(!isFinite(age) || age < 10 || age > 100){ toast('请输入 10-100 之间的年龄'); return; }
-  if(!isFinite(goal) || goal <= w){ goal = Math.round((w + 22) * 10) / 10; }
+  if(!isFinite(goal) || goal <= w){ goal = Math.round((w + 10) * 10) / 10; }
   goal = Math.round(goal * 10) / 10;
 
   state.profile = {
     height: h, weight: Math.round(w * 10) / 10, age: age,
-    trainingDays: obDays, goalWeight: goal, unit: 'lbs', createdAt: Date.now()
+    trainingDays: obDays, goalWeight: goal, unit: 'kg', createdAt: Date.now()
   };
   var tk = todayKey();
   if(!state.weights.some(function(x){ return x.date === tk; })){
-    state.weights.push({ date: tk, lbs: Math.round(w * 10) / 10 });
+    state.weights.push({ date: tk, kg: Math.round(w * 10) / 10 });
     state.weights.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
   }
   persist();
@@ -4041,7 +4065,7 @@ document.getElementById('exAddConfirm').addEventListener('click', function(){
   if(!isFinite(sets) || sets < 1 || sets > 20){ toast('组数应在 1-20 之间'); return; }
   if(!isFinite(reps) || reps < 1 || reps > 100){ toast('次数应在 1-100 之间'); return; }
   if(!isFinite(w) || w < 0) w = 0;
-  if(w > 600){ toast('重量超出合理范围'); return; }
+  if(w > 1500){ toast('重量超出合理范围'); return; }
   var p = { name: exSelected.cn, sets: sets, reps: reps, base: w, accessory: false };
   if(/plank/i.test(exSelected.en)) p.unit = '秒';
   var sess = todaySession();
