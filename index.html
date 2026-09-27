@@ -431,6 +431,17 @@ select.input{appearance:none}
   .sheet{border-radius:24px;max-width:520px}
   .sheet-head{margin-bottom:18px}
 }
+
+/* 力量记录 */
+.strength-row{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line)}
+.strength-row:last-child{border-bottom:none}
+.strength-row .s-name{flex:1;min-width:0;font-size:14px;font-weight:600}
+.strength-row .s-max{font-size:15px;font-weight:800;white-space:nowrap}
+.strength-row .s-delta{font-size:12px;font-weight:700;min-width:68px;text-align:right;white-space:nowrap}
+.strength-row .s-date{font-size:11px;color:var(--muted);min-width:46px;text-align:right;white-space:nowrap}
+.s-delta.up{color:var(--success)}
+.s-delta.down{color:var(--danger)}
+.badge.pr{background:rgba(251,191,36,.16);color:var(--warning);border:1px solid rgba(251,191,36,.3)}
 </style>
 </head>
 <body>
@@ -499,8 +510,8 @@ select.input{appearance:none}
       </div>
       <div class="bar goal" style="height:10px"><i id="weightBarFill" style="width:0%"></i></div>
       <div class="row" style="margin-top:10px">
-        <div class="small muted">当前 <b class="mono" id="curWeight" style="color:var(--text)">--</b> kg</div>
-        <div class="small muted">目标 <b class="mono" id="goalWeight" style="color:var(--text)">--</b> kg</div>
+        <div class="small muted">当前 <b class="mono" id="curWeight" style="color:var(--text)">--</b> 磅</div>
+        <div class="small muted">目标 <b class="mono" id="goalWeight" style="color:var(--text)">--</b> 磅</div>
       </div>
     </div>
 
@@ -731,6 +742,18 @@ select.input{appearance:none}
 
     <div class="card">
       <div class="row" style="margin-bottom:12px">
+        <div class="card-title" style="margin:0">力量记录</div>
+        <button class="btn btn-soft btn-sm" id="addStrengthBtn">添加记录</button>
+      </div>
+      <div class="small muted" style="margin-bottom:8px">追踪项目（点击选择或取消）</div>
+      <div class="seg" id="strengthTrackSeg" style="margin:0 0 14px;overflow-x:auto"></div>
+      <div class="chart-box"><canvas id="strengthChart"></canvas></div>
+      <div id="strengthChartFallback" class="empty" style="display:none">图表组件加载失败，请检查网络后刷新页面</div>
+      <div id="strengthTable" style="margin-top:14px"></div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
         <div class="card-title" style="margin:0">体型记录</div>
         <button class="btn btn-soft btn-sm" id="musclePhotoBtn">拍照记录</button>
       </div>
@@ -739,17 +762,17 @@ select.input{appearance:none}
     </div>
 
     <div class="grid-2">
-      <div class="stat"><div class="k">当前体重</div><div class="v mono" id="statWeight">--<small>kg</small></div></div>
-      <div class="stat"><div class="k">本周平均</div><div class="v mono" id="statWeekAvg">--<small>kg</small></div></div>
-      <div class="stat"><div class="k">增重速率</div><div class="v mono" id="statRate">--<small>kg/周</small></div></div>
-      <div class="stat"><div class="k">距离目标</div><div class="v mono" id="statToGoal">--<small>kg</small></div></div>
+      <div class="stat"><div class="k">当前体重</div><div class="v mono" id="statWeight">--<small>磅</small></div></div>
+      <div class="stat"><div class="k">本周平均</div><div class="v mono" id="statWeekAvg">--<small>磅</small></div></div>
+      <div class="stat"><div class="k">增重速率</div><div class="v mono" id="statRate">--<small>磅/周</small></div></div>
+      <div class="stat"><div class="k">距离目标</div><div class="v mono" id="statToGoal">--<small>磅</small></div></div>
     </div>
 
     <div class="card">
       <div class="card-title">目标进度</div>
       <div class="row" style="margin-bottom:10px">
-        <div class="small muted">起点 <b class="mono" id="progStart">--</b> kg</div>
-        <div class="small muted">目标 <b class="mono" id="progGoal">--</b> kg</div>
+        <div class="small muted">起点 <b class="mono" id="progStart">--</b> 磅</div>
+        <div class="small muted">目标 <b class="mono" id="progGoal">--</b> 磅</div>
       </div>
       <div class="bar goal" style="height:12px"><i id="progBarFill" style="width:0%"></i></div>
       <div class="small muted" style="margin-top:9px" id="progText">--</div>
@@ -883,10 +906,29 @@ select.input{appearance:none}
       <div class="sheet-title">记录体重</div>
       <button class="close-btn" data-close="weightOverlay"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
-    <div class="field"><label>体重（kg）</label><input class="input mono" id="weightInput" type="number" inputmode="decimal" step="0.1" min="25" max="250"></div>
+    <div class="field"><label>体重 (磅)</label><input class="input mono" id="weightInput" type="number" inputmode="decimal" step="0.1" min="55" max="550"></div>
     <div class="field"><label>日期</label><input class="input mono" id="weightDate" type="date"></div>
     <button class="btn btn-primary btn-block" id="saveWeight">保存记录</button>
     <div class="small muted" style="text-align:center;margin-top:12px">建议每天早晨空腹称重，数据更稳定</div>
+  </div>
+</div>
+
+<!-- 力量记录 -->
+<div class="overlay" id="strengthOverlay">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title">添加力量记录</div>
+      <button class="close-btn" data-close="strengthOverlay"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="field"><label>动作</label><select class="input" id="strengthExercise"></select></div>
+    <div class="grid-2">
+      <div class="field"><label>重量 (磅)</label><input class="input mono" id="strengthWeight" type="number" inputmode="decimal" step="0.5" min="0" max="1500"></div>
+      <div class="field"><label>次数</label><input class="input mono" id="strengthReps" type="number" inputmode="numeric" min="1" max="100" value="5"></div>
+    </div>
+    <div class="field"><label>日期</label><input class="input mono" id="strengthDate" type="date"></div>
+    <div class="small muted" id="strengthPrHint" style="margin:0 0 12px;min-height:18px"></div>
+    <button class="btn btn-primary btn-block" id="saveStrength">保存记录</button>
+    <div class="small muted" style="text-align:center;margin-top:12px">训练中完成的组次会自动写入力量记录</div>
   </div>
 </div>
 
@@ -908,11 +950,11 @@ select.input{appearance:none}
     <div class="ob-sub">填写基础信息，自动计算每日热量与营养目标</div>
     <div class="grid-2">
       <div class="field"><label>身高（cm）</label><input class="input mono" id="obHeight" type="number" inputmode="decimal" placeholder="175"></div>
-      <div class="field"><label>当前体重（kg）</label><input class="input mono" id="obWeight" type="number" inputmode="decimal" step="0.1" placeholder="58"></div>
+      <div class="field"><label>当前体重 (磅)</label><input class="input mono" id="obWeight" type="number" inputmode="decimal" step="0.1" placeholder="128"></div>
     </div>
     <div class="grid-2">
       <div class="field"><label>年龄</label><input class="input mono" id="obAge" type="number" inputmode="numeric" placeholder="23"></div>
-      <div class="field"><label>目标体重（kg）</label><input class="input mono" id="obGoal" type="number" inputmode="decimal" step="0.1" placeholder="68"></div>
+      <div class="field"><label>目标体重 (磅)</label><input class="input mono" id="obGoal" type="number" inputmode="decimal" step="0.1" placeholder="150"></div>
     </div>
     <div class="field">
       <label>每周训练天数</label>
@@ -1040,6 +1082,7 @@ const _d = s => atob(s);
    1. 存储与工具
    ============================================================ */
 var PREFIX = 'fitapp_';
+var KG_TO_LBS = 2.20462;
 function load(key, fb){
   try{ var v = localStorage.getItem(PREFIX + key); return v == null ? fb : JSON.parse(v); }
   catch(e){ return fb; }
@@ -1058,9 +1101,46 @@ var state = {
   archive: load('archive', []),
   supps: load('supps', {}),
   calAdjust: load('calAdjust', 0),
-  musclePhotos: load('muscle_photos', [])
+  musclePhotos: load('muscle_photos', []),
+  strength: load('strength', []),
+  strengthTracked: load('strength_tracked', ['杠铃卧推','杠铃深蹲','硬拉','杠铃肩推'])
 };
 if(!Array.isArray(state.musclePhotos)) state.musclePhotos = [];
+if(!Array.isArray(state.strength)) state.strength = [];
+if(!Array.isArray(state.strengthTracked)) state.strengthTracked = ['杠铃卧推','杠铃深蹲','硬拉','杠铃肩推'];
+
+/* 单位换算与旧数据迁移：体重统一以磅（lbs）存储与展示，
+   仅在 TDEE / 宏量计算时换算回公斤（1 kg = 2.20462 lbs） */
+function kgToLbs(v){ return Math.round(Number(v) * KG_TO_LBS * 10) / 10; }
+function lbsToKg(v){ return Number(v) / KG_TO_LBS; }
+function looksLikeKg(v){ return Number(v) > 0 && Number(v) < 120; }
+
+function normalizeWeightEntry(e){
+  if(!e || typeof e !== 'object') return e;
+  if(e.lbs != null) return { date: e.date, lbs: Math.round(Number(e.lbs) * 10) / 10 };
+  var v = Number(e.kg);
+  if(!isFinite(v)) v = 0;
+  return { date: e.date, lbs: looksLikeKg(v) ? kgToLbs(v) : Math.round(v * 10) / 10 };
+}
+
+function normalizeUnits(){
+  var changed = false;
+  if(state.profile && state.profile.unit !== 'lbs'){
+    if(looksLikeKg(state.profile.weight)){ state.profile.weight = kgToLbs(state.profile.weight); }
+    if(looksLikeKg(state.profile.goalWeight)){ state.profile.goalWeight = kgToLbs(state.profile.goalWeight); }
+    state.profile.unit = 'lbs';
+    changed = true;
+  }
+  for(var i = 0; i < state.weights.length; i++){
+    var e = state.weights[i];
+    if(!e || e.lbs == null){ state.weights[i] = normalizeWeightEntry(e); changed = true; }
+  }
+  if(changed){
+    save('profile', state.profile);
+    save('weights', state.weights);
+  }
+}
+normalizeUnits();
 
 function persist(opts){
   save('profile', state.profile);
@@ -1072,6 +1152,8 @@ function persist(opts){
   save('supps', state.supps);
   save('calAdjust', state.calAdjust);
   save('muscle_photos', state.musclePhotos);
+  save('strength', state.strength);
+  save('strength_tracked', state.strengthTracked);
   if(!opts || !opts.noSync){ scheduleSync(); }
 }
 
@@ -1377,12 +1459,13 @@ function exGroupLabel(key){
 var ACT_MAP = { 3:1.45, 4:1.55, 5:1.65, 6:1.75 };
 
 function latestWeight(){
-  if(state.weights.length) return state.weights[state.weights.length - 1].kg;
+  if(state.weights.length) return Number(state.weights[state.weights.length - 1].lbs) || 0;
   return state.profile ? Number(state.profile.weight) : 0;
 }
 
 function calcTargetsFrom(p, weight, calAdjust){
-  var w = Number(weight) || Number(p.weight) || 60;
+  var wLbs = Number(weight) || Number(p.weight) || 132;
+  var w = lbsToKg(wLbs);
   var bmr = 10 * w + 6.25 * Number(p.height) - 5 * Number(p.age) + 5;
   var tdee = bmr * (ACT_MAP[p.trainingDays] || 1.55);
   var calories = Math.round((tdee + 400 + (calAdjust || 0)) / 10) * 10;
@@ -1565,8 +1648,8 @@ function weeklyRate(){
   var recent = [], prev = [];
   for(var i = 0; i < ws.length; i++){
     var age = dayDiff(ws[i].date, today);
-    if(age >= 0 && age <= 6) recent.push(ws[i].kg);
-    else if(age >= 7 && age <= 13) prev.push(ws[i].kg);
+    if(age >= 0 && age <= 6) recent.push(Number(ws[i].lbs));
+    else if(age >= 7 && age <= 13) prev.push(Number(ws[i].lbs));
   }
   if(recent.length && prev.length){
     function avg(a){ var s = 0; for(var i = 0; i < a.length; i++) s += a[i]; return s / a.length; }
@@ -1575,7 +1658,7 @@ function weeklyRate(){
   var first = ws[0], last = ws[ws.length - 1];
   var span = dayDiff(first.date, last.date);
   if(span <= 0) return 0;
-  return (last.kg - first.kg) / (span / 7);
+  return (Number(last.lbs) - Number(first.lbs)) / (span / 7);
 }
 
 function weekAvgWeight(){
@@ -1583,7 +1666,7 @@ function weekAvgWeight(){
   var today = todayKey(), sum = 0, cnt = 0;
   for(var i = 0; i < ws.length; i++){
     var age = dayDiff(ws[i].date, today);
-    if(age >= 0 && age <= 6){ sum += ws[i].kg; cnt++; }
+    if(age >= 0 && age <= 6){ sum += Number(ws[i].lbs); cnt++; }
   }
   return cnt ? sum / cnt : null;
 }
@@ -1642,11 +1725,11 @@ function renderToday(){
   document.getElementById('greetSub').textContent = cnDate(k) + ' ' + weekName(k) + ' · 坚持记录是增肌的第一步';
 
   var start = state.profile ? Number(state.profile.weight) : latestWeight();
-  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 10);
+  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 22);
   var cur = latestWeight();
   var span = goal - start;
   var pct = span !== 0 ? ((cur - start) / span) * 100 : 100;
-  document.getElementById('weightRange').textContent = num(start, 1) + ' → ' + num(goal, 1) + ' kg';
+  document.getElementById('weightRange').textContent = num(start, 1) + ' → ' + num(goal, 1) + ' 磅';
   document.getElementById('curWeight').textContent = num(cur, 1);
   document.getElementById('goalWeight').textContent = num(goal, 1);
   setBar('weightBarFill', pct);
@@ -1750,9 +1833,9 @@ function buildSuggestions(t, tot){
   }
   var rate = weeklyRate();
   if(rate != null){
-    if(rate < 0.25) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' kg/周，低于目标，建议每日热量增加 200 千卡');
-    else if(rate > 0.5) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' kg/周，偏快，建议每日热量减少 100 千卡以控制脂肪增长');
-    else lines.push('近两周增重速率 ' + rate.toFixed(2) + ' kg/周，处于理想区间（0.25-0.5），保持当前计划');
+    if(rate < 0.55) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' 磅/周，低于目标，建议每日热量增加 200 千卡');
+    else if(rate > 1.1) lines.push('近两周增重速率 ' + rate.toFixed(2) + ' 磅/周，偏快，建议每日热量减少 100 千卡以控制脂肪增长');
+    else lines.push('近两周增重速率 ' + rate.toFixed(2) + ' 磅/周，处于理想区间（0.55-1.1 磅/周），保持当前计划');
   }
   return lines.map(function(l){ return '<div style="margin-bottom:7px">' + esc(l) + '</div>'; }).join('');
 }
@@ -1970,15 +2053,15 @@ var weightChart = null;
 function renderProgress(){
   var ws = sortedWeights();
   var cur = latestWeight();
-  var start = state.profile ? Number(state.profile.weight) : (ws.length ? ws[0].kg : 0);
-  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 10);
+  var start = state.profile ? Number(state.profile.weight) : (ws.length ? Number(ws[0].lbs) : 0);
+  var goal = state.profile ? Number(state.profile.goalWeight) : (start + 22);
 
-  document.getElementById('statWeight').innerHTML = num(cur, 1) + '<small>kg</small>';
+  document.getElementById('statWeight').innerHTML = num(cur, 1) + '<small>磅</small>';
   var wavg = weekAvgWeight();
-  document.getElementById('statWeekAvg').innerHTML = (wavg != null ? num(wavg, 1) : '--') + '<small>kg</small>';
+  document.getElementById('statWeekAvg').innerHTML = (wavg != null ? num(wavg, 1) : '--') + '<small>磅</small>';
   var rate = weeklyRate();
-  document.getElementById('statRate').innerHTML = (rate != null ? (rate > 0 ? '+' : '') + rate.toFixed(2) : '--') + '<small>kg/周</small>';
-  document.getElementById('statToGoal').innerHTML = num(Math.max(0, goal - cur), 1) + '<small>kg</small>';
+  document.getElementById('statRate').innerHTML = (rate != null ? (rate > 0 ? '+' : '') + rate.toFixed(2) : '--') + '<small>磅/周</small>';
+  document.getElementById('statToGoal').innerHTML = num(Math.max(0, goal - cur), 1) + '<small>磅</small>';
 
   document.getElementById('progStart').textContent = num(start, 1);
   document.getElementById('progGoal').textContent = num(goal, 1);
@@ -1986,7 +2069,7 @@ function renderProgress(){
   var pct = span > 0 ? ((cur - start) / span) * 100 : 100;
   setBar('progBarFill', pct);
   document.getElementById('progText').textContent = span > 0
-    ? ('已完成目标进度 ' + Math.max(0, Math.min(100, Math.round(pct))) + '%，距离目标还差 ' + num(Math.max(0, goal - cur), 1) + ' kg')
+    ? ('已完成目标进度 ' + Math.max(0, Math.min(100, Math.round(pct))) + '%，距离目标还差 ' + num(Math.max(0, goal - cur), 1) + ' 磅')
     : '目标设置需要调整，目标体重应高于起始体重';
 
   // 调节建议
@@ -1995,18 +2078,18 @@ function renderProgress(){
   if(rate == null){
     adjHtml = '体重数据不足（至少需要 2 条记录）。建议每天早晨空腹记录体重，系统会根据两周增重速率自动调节热量目标。';
     applyBtn.style.display = 'none';
-  } else if(rate < 0.25){
-    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' kg/周</b>，低于目标区间（0.25-0.5 kg/周）。<br>建议每日热量 <b>+200 千卡</b>，优先增加碳水摄入。';
+  } else if(rate < 0.55){
+    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' 磅/周</b>，低于目标区间（0.55-1.1 磅/周）。<br>建议每日热量 <b>+200 千卡</b>，优先增加碳水摄入。';
     applyBtn.style.display = '';
     applyBtn.setAttribute('data-delta', '200');
     applyBtn.textContent = '每日热量 +200 千卡';
-  } else if(rate > 0.5){
-    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' kg/周</b>，高于目标区间（0.25-0.5 kg/周）。<br>建议每日热量 <b>-100 千卡</b>，避免脂肪增长过快。';
+  } else if(rate > 1.1){
+    adjHtml = '近两周增重速率 <b style="color:var(--warning)">' + rate.toFixed(2) + ' 磅/周</b>，高于目标区间（0.55-1.1 磅/周）。<br>建议每日热量 <b>-100 千卡</b>，避免脂肪增长过快。';
     applyBtn.style.display = '';
     applyBtn.setAttribute('data-delta', '-100');
     applyBtn.textContent = '每日热量 -100 千卡';
   } else {
-    adjHtml = '近两周增重速率 <b style="color:var(--success)">' + rate.toFixed(2) + ' kg/周</b>，处于理想区间（0.25-0.5 kg/周），当前热量目标无需调整。';
+    adjHtml = '近两周增重速率 <b style="color:var(--success)">' + rate.toFixed(2) + ' 磅/周</b>，处于理想区间（0.55-1.1 磅/周），当前热量目标无需调整。';
     applyBtn.style.display = 'none';
   }
   adjHtml += '<div class="small muted" style="margin-top:9px">当前目标热量：' + calcTargets().calories + ' 千卡' +
@@ -2027,7 +2110,7 @@ function renderProgress(){
     var rev = ws.slice().reverse();
     for(var i = 0; i < Math.min(10, rev.length); i++){
       html += '<div class="hist-item"><div class="small">' + cnDate(rev[i].date) + ' ' + weekName(rev[i].date) + '</div>' +
-        '<div class="mono" style="font-weight:700">' + num(rev[i].kg, 1) + ' kg</div></div>';
+        '<div class="mono" style="font-weight:700">' + num(rev[i].lbs, 1) + ' 磅</div></div>';
     }
     document.getElementById('weightHistory').innerHTML = html;
   } else {
@@ -2035,6 +2118,7 @@ function renderProgress(){
   }
 
   renderChart(ws, goal);
+  renderStrength();
   renderMusclePhotos();
 }
 
@@ -2049,7 +2133,7 @@ function renderChart(ws, goal){
 
   var recent = ws.slice(-30);
   var labels = recent.map(function(x){ return shortDate(x.date); });
-  var data = recent.map(function(x){ return x.kg; });
+  var data = recent.map(function(x){ return Number(x.lbs); });
   var goalData = recent.map(function(){ return goal; });
 
   var config = {
@@ -2058,7 +2142,7 @@ function renderChart(ws, goal){
       labels: labels,
       datasets: [
         {
-          label: '体重 (kg)',
+          label: '体重 (磅)',
           data: data,
           borderColor: '#22d3ee',
           backgroundColor: 'rgba(34,211,238,0.14)',
@@ -2118,6 +2202,238 @@ function renderChart(ws, goal){
   try{ weightChart = new Chart(canvas, config); }
   catch(err){
     document.getElementById('chartFallback').style.display = '';
+  }
+}
+
+/* ============================================================
+   14b. 力量记录（主要项目重量增长，单位：磅）
+   ============================================================ */
+var STRENGTH_KEY_EXERCISES = ['杠铃卧推','杠铃深蹲','硬拉','杠铃肩推','杠铃划船'];
+var STRENGTH_COLORS = ['#22d3ee','#6366f1','#fbbf24','#34d399','#f472b6'];
+var strengthChart = null;
+
+function strengthList(){
+  return Array.isArray(state.strength) ? state.strength : [];
+}
+
+function strengthMaxFor(exercise){
+  var list = strengthList(), max = null;
+  for(var i = 0; i < list.length; i++){
+    var e = list[i];
+    if(!e || e.exercise !== exercise) continue;
+    var w = Number(e.weight_lbs) || 0;
+    if(max == null || w > max) max = w;
+  }
+  return max;
+}
+
+/* 写入一条力量记录（同日同动作只保留最大重量），返回是否写入及是否新纪录 */
+function strengthLogEntry(date, exercise, weightLbs, reps){
+  weightLbs = Math.round(Number(weightLbs) * 10) / 10;
+  reps = Math.round(Number(reps) || 0);
+  if(!date || !exercise || !isFinite(weightLbs) || weightLbs <= 0) return false;
+  var list = strengthList();
+  var idx = -1;
+  for(var i = 0; i < list.length; i++){
+    if(list[i].date === date && list[i].exercise === exercise){ idx = i; break; }
+  }
+  if(idx >= 0 && weightLbs <= Number(list[idx].weight_lbs)) return false;
+  var prevMax = strengthMaxFor(exercise);
+  var isPr = prevMax != null && weightLbs > prevMax;
+  if(idx >= 0){
+    list[idx].weight_lbs = weightLbs;
+    list[idx].reps = reps;
+    list[idx].is_pr = isPr;
+  } else {
+    list.push({ date: date, exercise: exercise, weight_lbs: weightLbs, reps: reps, is_pr: isPr });
+    list.sort(function(a, b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+  }
+  state.strength = list;
+  if(state.strengthTracked.indexOf(exercise) < 0) state.strengthTracked.push(exercise);
+  return { pr: isPr, weight: weightLbs };
+}
+
+/* 训练完成后自动记录当日最大重量（训练组重量为 kg，记录为磅） */
+function autoLogStrength(sess, silent){
+  if(!sess) return false;
+  var date = sess.date || todayKey();
+  var changed = false;
+  for(var i = 0; i < (sess.exercises || []).length; i++){
+    var ex = sess.exercises[i];
+    if(state.strengthTracked.indexOf(ex.name) < 0) continue;
+    var maxW = 0, repsAtMax = 0;
+    for(var j = 0; j < (ex.sets || []).length; j++){
+      var st = ex.sets[j];
+      if(!st.done) continue;
+      var w = Number(st.weight) || 0;
+      if(w > maxW){ maxW = w; repsAtMax = Number(st.reps) || 0; }
+    }
+    if(maxW > 0){
+      var r = strengthLogEntry(date, ex.name, kgToLbs(maxW), repsAtMax);
+      if(r){
+        changed = true;
+        if(!silent && r.pr) toast('力量记录更新：' + ex.name + ' ' + r.weight + ' 磅（新纪录）');
+      }
+    }
+  }
+  return changed;
+}
+
+/* 一次性回填：把历史训练中的最大重量写入力量记录 */
+function backfillStrength(){
+  try{
+    if(localStorage.getItem('fitapp_strength_backfilled') === '1') return;
+    localStorage.setItem('fitapp_strength_backfilled', '1');
+    var all = allSessions().slice().sort(function(a, b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+    var changed = false;
+    for(var i = 0; i < all.length; i++){
+      if(autoLogStrength(all[i].s, true)) changed = true;
+    }
+    if(changed) persist({ noSync: true });
+  }catch(e){}
+}
+
+function renderStrength(){
+  var tracked = state.strengthTracked;
+  var names = STRENGTH_KEY_EXERCISES.slice();
+  for(var i = 0; i < tracked.length; i++){ if(names.indexOf(tracked[i]) < 0) names.push(tracked[i]); }
+
+  var seg = document.getElementById('strengthTrackSeg');
+  if(seg){
+    var segHtml = '';
+    for(var c = 0; c < names.length; c++){
+      segHtml += '<button class="chip' + (tracked.indexOf(names[c]) >= 0 ? ' active' : '') +
+        '" data-strength-track="' + esc(names[c]) + '">' + esc(names[c]) + '</button>';
+    }
+    seg.innerHTML = segHtml;
+  }
+
+  var list = strengthList();
+  var table = document.getElementById('strengthTable');
+  if(table){
+    if(!tracked.length){
+      table.innerHTML = '<div class="empty">未选择追踪项目，请在上方选择要追踪的动作</div>';
+    } else {
+      var html = '<div class="strength-row small muted">' +
+        '<div class="s-name">动作</div><div class="s-max">当前最大</div>' +
+        '<div class="s-delta">较首次</div><div class="s-date">最近</div></div>';
+      for(var t = 0; t < tracked.length; t++){
+        var name = tracked[t];
+        var entries = [];
+        for(var k = 0; k < list.length; k++){ if(list[k].exercise === name) entries.push(list[k]); }
+        entries.sort(function(a, b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+        if(!entries.length){
+          html += '<div class="strength-row"><div class="s-name">' + esc(name) + '</div>' +
+            '<div class="small muted" style="flex:2">暂无记录</div></div>';
+          continue;
+        }
+        var first = entries[0], cur = entries[entries.length - 1];
+        var delta = Math.round((Number(cur.weight_lbs) - Number(first.weight_lbs)) * 10) / 10;
+        html += '<div class="strength-row">' +
+          '<div class="s-name">' + esc(name) + (cur.is_pr ? ' <span class="badge pr">新纪录</span>' : '') + '</div>' +
+          '<div class="s-max mono">' + num(cur.weight_lbs, 1) + ' 磅</div>' +
+          '<div class="s-delta mono ' + (delta > 0 ? 'up' : (delta < 0 ? 'down' : '')) + '">' +
+            (delta > 0 ? '↑ +' + num(delta, 1) : (delta < 0 ? '↓ ' + num(delta, 1) : '± 0')) + '</div>' +
+          '<div class="s-date mono">' + shortDate(cur.date) + '</div>' +
+          '</div>';
+      }
+      table.innerHTML = html;
+    }
+  }
+
+  renderStrengthChart();
+}
+
+function renderStrengthChart(){
+  var fb = document.getElementById('strengthChartFallback');
+  if(typeof Chart === 'undefined'){
+    if(fb) fb.style.display = '';
+    return;
+  }
+  if(fb) fb.style.display = 'none';
+  var canvas = document.getElementById('strengthChart');
+  if(!canvas) return;
+
+  var tracked = state.strengthTracked;
+  var list = strengthList();
+  var dateSet = {};
+  for(var i = 0; i < list.length; i++){
+    if(list[i] && tracked.indexOf(list[i].exercise) >= 0) dateSet[list[i].date] = true;
+  }
+  var dates = Object.keys(dateSet).sort();
+  var datasets = [];
+  for(var t = 0; t < tracked.length; t++){
+    var name = tracked[t];
+    var pts = [];
+    for(var d = 0; d < dates.length; d++){
+      var v = null;
+      for(var k = 0; k < list.length; k++){
+        if(list[k].exercise === name && list[k].date === dates[d]){ v = Number(list[k].weight_lbs); break; }
+      }
+      pts.push(v);
+    }
+    var color = STRENGTH_COLORS[t % STRENGTH_COLORS.length];
+    datasets.push({
+      label: name,
+      data: pts,
+      borderColor: color,
+      backgroundColor: color,
+      borderWidth: 2.2,
+      tension: 0.3,
+      spanGaps: true,
+      pointRadius: 3,
+      pointBorderColor: '#0f0f0f',
+      pointBorderWidth: 2
+    });
+  }
+
+  var config = {
+    type: 'line',
+    data: { labels: dates.map(shortDate), datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: '#9296b0', boxWidth: 12, boxHeight: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } }
+        },
+        tooltip: {
+          backgroundColor: '#26264a',
+          titleColor: '#eef0f6',
+          bodyColor: '#c9cbe0',
+          borderColor: 'rgba(99,102,241,.4)',
+          borderWidth: 1,
+          padding: 10,
+          displayColors: true,
+          callbacks: {
+            label: function(ctx){
+              return ctx.dataset.label + '：' + (ctx.parsed.y == null ? '--' : ctx.parsed.y) + ' 磅';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#9296b0', font: { size: 10 }, maxTicksLimit: 8 }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: {
+            color: '#9296b0',
+            font: { size: 10 },
+            callback: function(v){ return v + ' 磅'; }
+          }
+        }
+      }
+    }
+  };
+
+  if(strengthChart){ strengthChart.destroy(); strengthChart = null; }
+  try{ strengthChart = new Chart(canvas, config); }
+  catch(err){
+    if(fb) fb.style.display = '';
   }
 }
 
@@ -2212,6 +2528,7 @@ function onExerciseListClick(e){
     var set = sess.exercises[ei].sets[si];
     set.done = !set.done;
     if(set.done && Number(set.reps) <= 0) set.reps = sess.exercises[ei].targetReps;
+    if(set.done) autoLogStrength(sess);
     persist();
     renderWorkout();
     renderToday();
@@ -2268,6 +2585,7 @@ document.getElementById('finishWorkout').addEventListener('click', function(){
   if(done < total && !window.confirm('还有 ' + (total - done) + ' 组未完成，仍然打卡吗？')) return;
   sess.completed = true;
   sess.finishedAt = Date.now();
+  autoLogStrength(sess);
   persist();
 
   var ups = [];
@@ -2830,23 +3148,94 @@ function openWeightModal(){
   openOverlay('weightOverlay');
 }
 document.getElementById('saveWeight').addEventListener('click', function(){
-  var kg = Number(document.getElementById('weightInput').value);
+  var lbs = Number(document.getElementById('weightInput').value);
   var date = document.getElementById('weightDate').value || todayKey();
-  if(!isFinite(kg) || kg < 25 || kg > 250){ toast('请输入 25-250 之间的体重'); return; }
+  if(!isFinite(lbs) || lbs < 55 || lbs > 550){ toast('请输入 55-550 之间的体重（磅）'); return; }
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){ toast('请选择有效日期'); return; }
-  kg = Math.round(kg * 10) / 10;
+  lbs = Math.round(lbs * 10) / 10;
 
   var found = false;
   for(var i = 0; i < state.weights.length; i++){
-    if(state.weights[i].date === date){ state.weights[i].kg = kg; found = true; break; }
+    if(state.weights[i].date === date){ state.weights[i].lbs = lbs; found = true; break; }
   }
-  if(!found) state.weights.push({ date: date, kg: kg });
+  if(!found) state.weights.push({ date: date, lbs: lbs });
   state.weights.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
-  if(state.profile && date === todayKey()) state.profile.weight = kg;
+  if(state.profile && date === todayKey()) state.profile.weight = lbs;
   persist();
   closeOverlay('weightOverlay');
   renderAll();
-  toast('体重已记录：' + kg + ' kg');
+  toast('体重已记录：' + lbs + ' 磅');
+});
+
+/* ============================================================
+   22b. 交互：力量记录
+   ============================================================ */
+function openStrengthModal(){
+  var sel = document.getElementById('strengthExercise');
+  var names = STRENGTH_KEY_EXERCISES.slice();
+  for(var i = 0; i < EXERCISE_DB.length; i++){
+    if(names.indexOf(EXERCISE_DB[i].cn) < 0) names.push(EXERCISE_DB[i].cn);
+  }
+  var html = '';
+  for(var j = 0; j < names.length; j++){
+    html += '<option value="' + esc(names[j]) + '">' + esc(names[j]) + '</option>';
+  }
+  sel.innerHTML = html;
+  document.getElementById('strengthWeight').value = '';
+  document.getElementById('strengthReps').value = 5;
+  document.getElementById('strengthDate').value = todayKey();
+  updateStrengthPrHint();
+  openOverlay('strengthOverlay');
+}
+
+function updateStrengthPrHint(){
+  var exName = document.getElementById('strengthExercise').value;
+  var w = Number(document.getElementById('strengthWeight').value);
+  var date = document.getElementById('strengthDate').value || todayKey();
+  var hint = document.getElementById('strengthPrHint');
+  if(!hint) return;
+  var max = strengthMaxFor(exName);
+  if(!isFinite(w) || w <= 0){
+    hint.textContent = max != null ? ('当前纪录：' + num(max, 1) + ' 磅，保存后将与之比较') : '暂无历史纪录，保存后将成为首个纪录';
+    return;
+  }
+  if(max == null){ hint.textContent = '保存后将成为该动作的首个纪录'; return; }
+  if(w > max){
+    hint.innerHTML = '<b style="color:var(--warning)">高于当前纪录 ' + num(w - max, 1) + ' 磅，将标记为新纪录</b>';
+  } else {
+    hint.textContent = '当前纪录：' + num(max, 1) + ' 磅，还差 ' + num(max - w, 1) + ' 磅刷新纪录';
+  }
+}
+
+document.getElementById('addStrengthBtn').addEventListener('click', openStrengthModal);
+document.getElementById('strengthExercise').addEventListener('change', updateStrengthPrHint);
+document.getElementById('strengthWeight').addEventListener('input', updateStrengthPrHint);
+document.getElementById('strengthDate').addEventListener('change', updateStrengthPrHint);
+document.getElementById('strengthTrackSeg').addEventListener('click', function(e){
+  var chip = e.target.closest('[data-strength-track]');
+  if(!chip) return;
+  var name = chip.getAttribute('data-strength-track');
+  var idx = state.strengthTracked.indexOf(name);
+  if(idx >= 0) state.strengthTracked.splice(idx, 1);
+  else state.strengthTracked.push(name);
+  persist();
+  renderStrength();
+});
+document.getElementById('saveStrength').addEventListener('click', function(){
+  var exName = document.getElementById('strengthExercise').value;
+  var w = Number(document.getElementById('strengthWeight').value);
+  var reps = Math.round(Number(document.getElementById('strengthReps').value));
+  var date = document.getElementById('strengthDate').value || todayKey();
+  if(!exName){ toast('请选择动作'); return; }
+  if(!isFinite(w) || w <= 0 || w > 1500){ toast('请输入 0-1500 之间的重量（磅）'); return; }
+  if(!isFinite(reps) || reps < 1) reps = 1;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){ toast('请选择有效日期'); return; }
+  var r = strengthLogEntry(date, exName, w, reps);
+  persist();
+  closeOverlay('strengthOverlay');
+  renderProgress();
+  if(r) toast('力量记录已保存：' + exName + ' ' + r.weight + ' 磅' + (r.pr ? '（新纪录）' : ''));
+  else toast('该日期已有更高纪录，未做修改');
 });
 
 /* ============================================================
@@ -2935,7 +3324,7 @@ function obPreview(){
   var h = Number(document.getElementById('obHeight').value);
   var w = Number(document.getElementById('obWeight').value);
   var age = Number(document.getElementById('obAge').value);
-  if(!isFinite(h) || h < 100 || h > 250 || !isFinite(w) || w < 25 || w > 250 || !isFinite(age) || age < 10 || age > 100){
+  if(!isFinite(h) || h < 100 || h > 250 || !isFinite(w) || w < 55 || w > 550 || !isFinite(age) || age < 10 || age > 100){
     document.getElementById('obCal').textContent = '--';
     document.getElementById('obProtein').textContent = '--';
     document.getElementById('obCarbs').textContent = '--';
@@ -2969,18 +3358,18 @@ document.getElementById('obSubmit').addEventListener('click', function(){
   var age = Number(document.getElementById('obAge').value);
   var goal = Number(document.getElementById('obGoal').value);
   if(!isFinite(h) || h < 100 || h > 250){ toast('请输入 100-250 之间的身高'); return; }
-  if(!isFinite(w) || w < 25 || w > 250){ toast('请输入 25-250 之间的体重'); return; }
+  if(!isFinite(w) || w < 55 || w > 550){ toast('请输入 55-550 之间的体重（磅）'); return; }
   if(!isFinite(age) || age < 10 || age > 100){ toast('请输入 10-100 之间的年龄'); return; }
-  if(!isFinite(goal) || goal <= w){ goal = Math.round((w + 10) * 10) / 10; }
+  if(!isFinite(goal) || goal <= w){ goal = Math.round((w + 22) * 10) / 10; }
   goal = Math.round(goal * 10) / 10;
 
   state.profile = {
     height: h, weight: Math.round(w * 10) / 10, age: age,
-    trainingDays: obDays, goalWeight: goal, createdAt: Date.now()
+    trainingDays: obDays, goalWeight: goal, unit: 'lbs', createdAt: Date.now()
   };
   var tk = todayKey();
   if(!state.weights.some(function(x){ return x.date === tk; })){
-    state.weights.push({ date: tk, kg: Math.round(w * 10) / 10 });
+    state.weights.push({ date: tk, lbs: Math.round(w * 10) / 10 });
     state.weights.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
   }
   persist();
@@ -3238,6 +3627,9 @@ function collectSyncData(){
     workouts: state.workouts,
     archive: state.archive,
     muscle_photos: state.musclePhotos,
+    strength: state.strength,
+    fitapp_strength: state.strength,
+    strength_tracked: state.strengthTracked,
     settings: { calAdjust: state.calAdjust }
   };
 }
@@ -3253,15 +3645,36 @@ function mergeByIdList(localArr, remoteArr, keyFn){
   return out;
 }
 function mergeWeightsLists(localArr, remoteArr){
-  var out = remoteArr.slice();
+  var out = remoteArr.map(normalizeWeightEntry);
   for(var i = 0; i < localArr.length; i++){
     var found = false;
     for(var j = 0; j < out.length; j++){
       if(out[j] && localArr[i] && out[j].date === localArr[i].date){ found = true; break; }
     }
-    if(!found) out.push(localArr[i]);
+    if(!found) out.push(normalizeWeightEntry(localArr[i]));
   }
   out.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  return out;
+}
+function mergeStrengthLists(localArr, remoteArr){
+  var out = [], seen = {}, i;
+  function keyOf(x){ return String(x.date || '') + '|' + String(x.exercise || ''); }
+  function add(arr){
+    for(var n = 0; n < arr.length; n++){
+      var it = arr[n];
+      if(!it) continue;
+      var k = keyOf(it);
+      if(seen[k] != null){
+        if((Number(it.weight_lbs) || 0) > (Number(out[seen[k]].weight_lbs) || 0)) out[seen[k]] = it;
+      } else {
+        seen[k] = out.length;
+        out.push(it);
+      }
+    }
+  }
+  add(remoteArr);
+  add(localArr);
+  out.sort(function(a, b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
   return out;
 }
 function mergeDateMap(local, remote){
@@ -3300,7 +3713,17 @@ function applyRemoteData(data){
         return it && it.id != null ? String(it.id) : (side + i + ':' + String(it && it.date || ''));
       });
     }
+    var remoteStrength = Array.isArray(data.strength) ? data.strength : (Array.isArray(data.fitapp_strength) ? data.fitapp_strength : null);
+    if(remoteStrength){
+      state.strength = mergeStrengthLists(strengthList(), remoteStrength);
+    }
+    if(Array.isArray(data.strength_tracked)){
+      for(var q = 0; q < data.strength_tracked.length; q++){
+        if(state.strengthTracked.indexOf(data.strength_tracked[q]) < 0) state.strengthTracked.push(data.strength_tracked[q]);
+      }
+    }
     if(data.settings && data.settings.calAdjust != null) state.calAdjust = Number(data.settings.calAdjust) || 0;
+    normalizeUnits();
     persist({ noSync: true });
     renderAll();
   }catch(e){}
@@ -3637,6 +4060,7 @@ function init(){
   renderFoodCats();
   renderFoodList();
   initGate();
+  backfillStrength();
 
   if(state.profile){
     closeOverlay('onboarding');
